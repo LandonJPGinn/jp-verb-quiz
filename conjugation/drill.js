@@ -1,4 +1,14 @@
 // drill.js
+<<<<<<< HEAD
+import words from './words.js';
+import calculateAllConjugations from './rules.js';
+=======
+import {
+  calculateConjugations,
+  calculateAllConjugations
+} from './rules.js';
+
+>>>>>>> ed068be (Connect functions)
 
 var transformations = [];
 
@@ -7,9 +17,9 @@ var log;
 const configOptions = {
 
   options: ["plain", "polite", "negative", "past", "te-form", "progressive",
-    "potential", "imperative", "passive", "causative", "godan", "ichidan",
-    "iku", "kuru", "suru", "i-adjective", "na-adjective", "ii", "desire",
-    "volitional", "trick", "kana", "furigana_always", "use_voice"],
+    "potential", "conditional", "provisional", "imperative", "passive", "causative", "godan", "ichidan",
+    "iku", "kuru", "suru", "aru", "iru", "i-adjective", "na-adjective", "ii", "desire",
+    "volitional", "trick", "kana", "furigana_always", "use_voice","common","n5","n4","n3","n2","n1"],
 
   selects: ["questionFocus"],
 
@@ -18,12 +28,14 @@ const configOptions = {
 
 const defaultConfig = {
   "plain": true,
-  "polite": true,
+  "polite": false,
   "negative": true,
   "past": true,
   "te-form": false,
   "progressive": false,
   "potential": false,
+  "conditional": false,
+  "provisional": false,
   "imperative": false,
   "passive": false,
   "causative": false,
@@ -32,6 +44,8 @@ const defaultConfig = {
   "iku": true,
   "kuru": true,
   "suru": true,
+  "iru": true,
+  "aru": true,
   "i-adjective": false,
   "na-adjective": false,
   "ii": false,
@@ -41,6 +55,12 @@ const defaultConfig = {
   "kana": false,
   "furigana_always": true,
   "use_voice": false,
+  "common": true,
+  "n5": false,
+  "n4": false,
+  "n3": false,
+  "n2": false,
+  "n1": false,
   "questionFocus": "none",
   "numQuestions": "10"
 }
@@ -135,7 +155,7 @@ function kanjiForm(words) {
     words = [words];
   }
 
-  return words.map(function (word) { return word.split(/(.)\[[^\]]*\]/).join(""); });
+  return words.map(function (word) { return word.split(/(.+)\[[^\]]*\]/).join(""); });
 }
 
 function getVerbForms(entry) {
@@ -314,7 +334,7 @@ function validQuestion(entry, forms, transformation, options) {
     if (options.questionFocus != "none") {
 
       if (options.questionFocus == 'tetakei') {
-        // console.log("tetakei", words[entry].conjugations[transformation.from].tetakei, words[entry].conjugations[transformation.to].tetakei)
+        console.log("tetakei", words[entry].conjugations[transformation.from].tetakei, words[entry].conjugations[transformation.to].tetakei)
         if (words[entry].conjugations[transformation.from].tetakei == words[entry].conjugations[transformation.to].tetakei) {
           valid = false;
         }
@@ -340,6 +360,10 @@ function generateQuestion() {
     "non-て": "<span class='emphasis first'>remove</span> the <span class='emphasis'>て pattern</span> from the following",
     "potential": "<span class='first'>make</span> the following <span class='emphasis'>potential</span>",
     "non-potential": "<span class='first'>make</span> the following <span class='emphasis'>non-potential</span>",
+    "conditional": "<span class='first'>make</span> the following <span class='emphasis'>conditional</span>",
+    "non-conditional": "<span class='first'>make</span> the following <span class='emphasis'>non-conditional</span>",
+    "provisional": "<span class='first'>make</span> the following <span class='emphasis'>provisional</span>",
+    "non-provisional": "<span class='first'>make</span> the following <span class='emphasis'>non-provisional</span>",
     "imperative": "<span class='first'>make</span> the following <span class='emphasis'>imperative</span>",
     "non-imperative": "<span class='first'>make</span> the following <span class='emphasis'>non-imperative</span>",
     "causative": "<span class='first'>make</span> the following <span class='emphasis'>causative</span>",
@@ -370,7 +394,7 @@ function generateQuestion() {
     }
 
     entry = Object.keys(words).randomElement();
-    transformation = transformations.randomElement();
+    var transformation = transformations.randomElement();
 
     from_form = transformation.from;
     to_form = transformation.to;
@@ -384,9 +408,10 @@ function generateQuestion() {
     // transformation structure are trick questions and so a 33% filter here
     // will achieve the 25% because this test is only performed when a trick
     // question has been selected.
+    // Landon - Trick questions always felt too common, so I'm cutting the chances by a tenth.
 
     if (transformation.tags.indexOf('trick') != -1) {
-      if (Math.random() > 0.333) {
+      if (Math.random() > 0.033) {
         valid = false;
       }
     }
@@ -399,6 +424,7 @@ function generateQuestion() {
   var kanjiForms = forms["kanji"];
   var kanaForms = forms["hiragana"];
   var furiganaForms = forms["furigana"];
+
 
   var candidates;
 
@@ -459,12 +485,15 @@ function generateQuestion() {
     "iku": "godan verb",
     "suru": "suru verb",
     "kuru": "special verb",
+    "aru": "aru verb",
+    "iru": "iru verb",
     "i-adjective": "い-adjective",
     "ii": "い-adjective",
     "na-adjective": "な-adjective",
   };
 
   var dictionary = words[data.entry].conjugations["dictionary"].forms;
+  // var meaning = words[data.entry].conjugations["meaning"].forms;
 
   if (words[data.entry].group == "na-adjective") {
     for (var i = 0; i < dictionary.length; i++) {
@@ -477,7 +506,7 @@ function generateQuestion() {
   } else {
     dictionary = kanaForm(dictionary);
   }
-
+  $('#explain-meaning').html("WIP");
   $('#explain-given').html(givenWord);
   $('#explain-given-tags').html(data.transformation.from_tags.map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
   $('.explain-given-dictionary').html(dictionary);
@@ -531,6 +560,8 @@ function processAnswer() {
 
   var questionData = window.questionData;
   var response = $('#answer').val().trim();
+  console.log("answer provided", response);
+  console.log("questionData", questionData.answer);
 
   var shake = false;
 
@@ -546,6 +577,7 @@ function processAnswer() {
   }
 
   var correct = ((questionData.answer.indexOf(response) != -1) || (questionData.answer2.indexOf(response) != -1));
+  console.log("correct", correct);
 
   var klass = correct ? "correct" : "incorrect";
 
@@ -589,7 +621,7 @@ function shakeInputArea() {
 
   setTimeout(function () {
     inputArea.removeClass(shakeClass)
-  }, 1000);
+  }, 10000);
 }
 
 function updateHistoryView(log) {
@@ -675,6 +707,10 @@ function showSplash() {
   $('#scoreSection').hide();
 
   $('#go').focus();
+}
+
+export default function checkAnswer() {
+  processAnswer();
 }
 
 function startQuiz() {
@@ -899,6 +935,8 @@ function calculateTransitions() {
       "polite": "plain",
       "te-form": "non-て",
       "potential": "non-potential",
+      "conditional": "non-conditional",
+      "provisional": "non-provisional",
       "imperative": "non-imperative",
       "causative": "non-causative",
       "passive": "active",
@@ -913,6 +951,8 @@ function calculateTransitions() {
       "polite": "polite",
       "te-form": "て",
       "potential": "potential",
+      "conditional": "conditional",
+      "provisional": "provisional",
       "imperative": "imperative",
       "causative": "causative",
       "passive": "passive",
@@ -922,6 +962,7 @@ function calculateTransitions() {
     };
 
     var phrase;
+    var type;
 
     phrase = phrase || from_extra[arrayDifference(from, to)[0]];
     phrase = phrase || to_extra[arrayDifference(to, from)[0]];
@@ -1085,16 +1126,17 @@ function loadOptions() {
 
 $('window').ready(function () {
 
-	if (window.speechSynthesis) {
-    populateVoiceList();
-    $('#useVoiceSection').show();
-    $('input#use_voice').click(updateVoiceSelect);
-    $('select#voice_select').on('change', updateVoiceSelection);
-  }
+	// if (window.speechSynthesis) {
+  //   populateVoiceList();
+  //   $('#useVoiceSection').show();
+  //   $('input#use_voice').click(updateVoiceSelect);
+  //   $('select#voice_select').on('change', updateVoiceSelection);
+  // }
 
   calculateAllConjugations();
   calculateTransitions();
   loadOptions();
+  restoreDefaults();
 
   $('#go').click(startQuiz);
   $('#defaults').click(restoreDefaults);
@@ -1112,3 +1154,31 @@ $('window').ready(function () {
 
   showSplash();
 });
+
+window.processAnswer = processAnswer;
+window.proceed = proceed;
+window.explain = explain;
+// window.checkAnswer = checkAnswer;
+// window.startQuiz = startQuiz;
+// window.endQuiz = endQuiz;
+// window.updateVoiceSelect = updateVoiceSelect;
+// window.updateVoiceSelection = updateVoiceSelection;
+// window.loadOptions = loadOptions;
+// window.restoreDefaults = restoreDefaults;
+// window.updateOptionSummary = updateOptionSummary;
+// window.saveOptions = saveOptions;
+// window.calculateTransitions = calculateTransitions;
+// window.getOptions = getOptions;
+// window.loadVoiceList = loadVoiceList;
+// window.populateVoiceList = populateVoiceList;
+// window.textToSpeech = textToSpeech;
+// window.arrayDifference = arrayDifference;
+// window.arrayUnique = arrayUnique;
+// window.updateProgressBar = updateProgressBar;
+// window.updateHistoryView = updateHistoryView;
+// window.resetLog = resetLog;
+// window.commaList = commaList;
+// window.wordWithFurigana = wordWithFurigana;
+// window.kanaForm = kanaForm;
+// window.getVoiceConfig = getVoiceConfig;
+// document.querySelector('quizForm').addEventListener('action', processAnswer);

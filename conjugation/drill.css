@@ -1,10 +1,10 @@
 :root {
-  --primary-colour: #0060c0;
+  --primary-colour: #285185;
 }
 
 body, input {
-  font-family: Amaranth, sans-serif; 
-  background: #eee;
+  font-family: "Noto Sans JP", sans-serif;
+  background: #e4e8eb;
 
   --other: #4A2067;
   --neutral-dark: #441f00;

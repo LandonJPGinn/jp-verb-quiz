@@ -7,11 +7,21 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="drill.css" type="text/css" media="screen">
+<<<<<<< HEAD
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+
+  <script defer type="text/ecmascript" src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script defer type="module" src="rules.js"></script>
+  <script defer type="module" src="drill.js"></script>
+=======
   <link href="https://fonts.googleapis.com/css?family=Amaranth" rel="stylesheet">
   <script type="text/ecmascript" src="//code.jquery.com/jquery-3.1.1.min.js"></script>
-  <script type="text/ecmascript" src="rules.js"></script>
-  <script type="text/ecmascript" src="drill.js"></script>
-  <title>Don's Japanese Conjugation Drill</title>
+  <script type="module" src="rules.js"></script>
+  <script type="module" src="drill.js"></script>
+>>>>>>> 9859022 (edit as module not script)
+  <title>LanDon's Japanese Conjugation Drill</title>
 </head>
 
 <body>
@@ -19,7 +29,8 @@
 
   <div id="splash" class="container mt-4">
 
-    <h2 class="text-center mb-4">Don's Japanese Conjugation Drill</h2>
+    <h2 class="text-center mb-4">LanDon's Japanese Conjugation Drill</h2>
+    <h6 class="text-center mb-4">Landon's extension to the widely popular <a href="https://wkdonc.github.io/conjugation/drill.html">Don's Japanese Conjugation Drill</a></h6>
 
     <div class="row">
       <dl class="questionOptions mx-auto mb-0">
@@ -47,6 +58,8 @@
               <option value="desire">Desire</option>
               <option value="volitional">Volitional</option>
               <option value="potential">Potential</option>
+              <option value="conditional">Conditional(たら)</option>
+              <option value="provisional">Provisional</option>
               <option value="imperative">Imperative</option>
               <option value="passive">Passive</option>
               <option value="causative">Causative</option>
@@ -99,6 +112,10 @@
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
                   id="potential"><label for="potential" class="form-check-label">Potential</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
+                  id="conditional"><label for="conditional" class="form-check-label">Conditional(たら)</label></div>
+              <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
+                  id="provisional"><label for="provisional" class="form-check-label">Provisional</label></div>
+              <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
                   id="imperative"><label for="imperative" class="form-check-label">Imperative</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="passive"><label
                   for="passive" class="form-check-label">Passive</label></div>
@@ -127,6 +144,10 @@
                       checked><label for="kuru" class="form-check-label">来る verb</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="suru"
                       checked><label for="suru" class="form-check-label">する verbs</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="aru"
+                      checked><label for="aru" class="form-check-label">ある verb</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iru"
+                      checked><label for="iru" class="form-check-label">いる verbs</label></div>
                 </div>
               </div>
             </div>
@@ -142,6 +163,19 @@
                   <div class="text-left ml-1 specials">Special cases</div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="ii"><label
                       for="ii" class="form-check-label">いい adjective</label></div>
+                  <div class="text-left ml-1 specials">Filters</div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="common"><label
+                    for="common" class="form-check-label">Top 100 Common Verbs</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n5"><label
+                    for="n5" class="form-check-label">JLPT N5</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n4"><label
+                    for="n4" class="form-check-label">JLPT N4</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n3"><label
+                    for="n3" class="form-check-label">JLPT N3</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n2"><label
+                    for="n2" class="form-check-label">JLPT N2</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="n1"><label
+                    for="n1" class="form-check-label">JLPT N1</label></div>
                 </div>
               </div>
             </div>
@@ -175,8 +209,8 @@
             class="form-check-label" for="kana">Use hiragana throughout the test (no kanji)</label></div>
         <div class="form-check"><input class="form-check-input" type="checkbox" id="furigana_always" checked><label
             class="form-check-label" for="furigana_always">Show furigana on questions</label></div>
-        <div class="form-check" id="useVoiceSection" style="display: none"><input class="form-check-input" type="checkbox" id="use_voice"><label
-            class="form-check-label" for="use_voice">Use speech synthesis (experimental)</label></div>
+        <!-- <div class="form-check" id="useVoiceSection" style="display: none"><input class="form-check-input" type="checkbox" id="use_voice"><label
+            class="form-check-label" for="use_voice">Use speech synthesis (experimental)</label></div> -->
       </div>
     </div>
 
@@ -232,7 +266,7 @@
 
     <div id="inputArea" class="row">
       <div class="col-12">
-        <form action="javascript:processAnswer()">
+        <form name="quizForm" action="javascript:processAnswer()">
           <input placeholder="答え" autocomplete="off" autocapitalize="off" id="answer" aria-label="答え">
         </form>
       </div>
@@ -248,7 +282,7 @@
           <div class="col-12 text-center" id="correction"></div>
         </div>
         <div class="row mt-4">
-          <button class="btn btn-primary mb-2 mx-auto" onclick="explain()">Explain</button>
+          <button class="btn btn-primary mb-2 mx-auto" onclick="javascript:explain()">Explain</button>
         </div>
       </div>
 
@@ -257,6 +291,9 @@
     <div class="row ml-4 mr-4">
 
       <div style="display: none" id="explanation" class="mt-4 col mx-auto">
+        <h3>Explanation</h3>
+
+        <p><span id="explain-given"></span> - meaning: <span id="explain-meaning"></span>.</p>
 
         <h3>1. Recognise the given form</h3>
 
@@ -306,10 +343,6 @@
 
 
   </div>
-
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
-    integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
-    crossorigin="anonymous"></script>
 
 </body>
 

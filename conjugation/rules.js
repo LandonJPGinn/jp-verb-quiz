@@ -1,74 +1,7 @@
 // Calculate conjugated forms using a rule set
+// 2024 updated by Landon Ginn
 
-// Should add ある and いる.
-
-var words = {
-
-  "走る":       { "group": "godan",        "dictionary": "走[はし]る", },
-  "死ぬ":       { "group": "godan",        "dictionary": "死[し]ぬ", },
-  "上る":       { "group": "godan",        "dictionary": "上[のぼ]る", },
-  "聞く":       { "group": "godan",        "dictionary": "聞[き]く", },
-  "書く":       { "group": "godan",        "dictionary": "書[か]く", },
-  "消す":       { "group": "godan",        "dictionary": "消[け]す", },
-  "遊ぶ":       { "group": "godan",        "dictionary": "遊[あそ]ぶ", },
-  "学ぶ":       { "group": "godan",        "dictionary": "学[まな]ぶ", },
-  "喜ぶ":       { "group": "godan",        "dictionary": "喜[よろこ]ぶ", },
-  "泳ぐ":       { "group": "godan",        "dictionary": "泳[およ]ぐ", },
-  "注ぐ":       { "group": "godan",        "dictionary": "注[そそ]ぐ", },
-  "急ぐ":       { "group": "godan",        "dictionary": "急[いそ]ぐ", },
-  "立つ":       { "group": "godan",        "dictionary": "立[た]つ", },
-  "持つ":       { "group": "godan",        "dictionary": "持[も]つ", },
-  "打つ":       { "group": "godan",        "dictionary": "打[う]つ", },
-  "飲む":       { "group": "godan",        "dictionary": "飲[の]む", },
-  "作る":       { "group": "godan",        "dictionary": "作[つく]る", },
-  "買い戻す":   { "group": "godan",        "dictionary": "買[か]い戻[もど]す", },
-  "読む":       { "group": "godan",        "dictionary": "読[よ]む", },
-  "思う":       { "group": "godan",        "dictionary": "思[おも]う", },
-  "座る":       { "group": "godan",        "dictionary": "座[すわ]る", },
-  "休む":       { "group": "godan",        "dictionary": "休[やす]む", },
-  "足す":       { "group": "godan",        "dictionary": "足[た]す", },
-  "歌う":       { "group": "godan",        "dictionary": "歌[うた]う", },
-  "買う":       { "group": "godan",        "dictionary": "買[か]う", },
-
-  "上げる":     { "group": "ichidan",      "dictionary": "上[あ]げる", },
-  "着る":       { "group": "ichidan",      "dictionary": "着[き]る", },
-  "育てる":     { "group": "ichidan",      "dictionary": "育[そだ]てる", },
-  "褒める":     { "group": "ichidan",      "dictionary": "褒[ほ]める", },
-  "出る":       { "group": "ichidan",      "dictionary": "出[で]る", },
-  "食べる":     { "group": "ichidan",      "dictionary": "食[た]べる", },
-  "起きる":     { "group": "ichidan",      "dictionary": "起[お]きる", },
-  "買い換える": { "group": "ichidan",      "dictionary": "買[か]い換[か]える", },
-  "買い与える": { "group": "ichidan",      "dictionary": "買[か]い与[あた]える", },
-
-  "行く":       { "group": "iku",          "dictionary": "行[い]く", },
-
-  "する":       { "group": "suru",         "dictionary": "する", },
-  "勉強する":   { "group": "suru",         "dictionary": "勉[べん]強[きょう]する", },
-  "電話する":   { "group": "suru",         "dictionary": "電[でん]話[わ]する", },
-  "開発する":   { "group": "suru",         "dictionary": "開[かい]発[はつ]する", },
-  "計算する":   { "group": "suru",         "dictionary": "計[けい]算[さん]する", },
-
-  "来る":       { "group": "kuru",         "dictionary": "来[く]る", },
-
-  "高い":       { "group": "i-adjective",  "dictionary": "高[たか]い", },
-  "面白い":     { "group": "i-adjective",  "dictionary": "面[おも]白[しろ]い", },
-  "暗い":       { "group": "i-adjective",  "dictionary": "暗[くら]い", },
-  "暖かい":     { "group": "i-adjective",  "dictionary": "暖[あたた]かい", },
-  "華々しい":   { "group": "i-adjective",  "dictionary": "華[はな]々[ばな]しい", },
-  "怖い":       { "group": "i-adjective",  "dictionary": "怖[こわ]い", },
-  "硬い":       { "group": "i-adjective",  "dictionary": "硬[かた]い", },
-
-  "いい":       { "group": "ii",           "dictionary": "いい", },
-
-  "有名":       { "group": "na-adjective", "dictionary": "有[ゆう]名[めい]だ", },
-  "好き":       { "group": "na-adjective", "dictionary": "好[す]きだ", },
-  "元気":       { "group": "na-adjective", "dictionary": "元[げん]気[き]だ", },
-  "意地悪":     { "group": "na-adjective", "dictionary": "意[い]地[じ]悪[わる]だ", },
-  "静":         { "group": "na-adjective", "dictionary": "静[しず]かだ", },
-  "便利":       { "group": "na-adjective", "dictionary": "便[べん]利[り]だ", },
-  "上手":       { "group": "na-adjective", "dictionary": "上[じょう]手[ず]だ", },
-  "幸い":       { "group": "na-adjective", "dictionary": "幸[さいわ]いだ", },
-};
+import words from './words.js';
 
 var rules = {
 
@@ -210,6 +143,65 @@ var rules = {
         { "before": "ぬ", "after": "ななくて"}, { "before": "ぬ", "after": "なないで"},
         { "before": "ぶ", "after": "ばなくて"}, { "before": "ぶ", "after": "ばないで"},
         { "before": "む", "after": "まなくて"}, { "before": "む", "after": "まないで"},
+      ],
+    },
+
+    "conditional": {
+      
+      forms: [
+        { "before": "る", "after": "ったら" },
+        { "before": "つ", "after": "ったら" },
+        { "before": "う", "after": "ったら" },
+        { "before": "く", "after": "ったら" },
+        { "before": "ぐ", "after": "いだら" },
+        { "before": "す", "after": "したら" },
+        { "before": "ぬ", "after": "んだら" },
+        { "before": "ぶ", "after": "んだら" },
+        { "before": "む", "after": "んだら" },
+      ],
+    },
+
+    "conditional negative": {
+      
+      forms: [
+        { "before": "る", "after": "らなかったら" },
+        { "before": "つ", "after": "たなかったら" },
+        { "before": "う", "after": "わなかったら" },
+        { "before": "く", "after": "かなかったら" },
+        { "before": "ぐ", "after": "がなかったら" },
+        { "before": "す", "after": "さなかったら" },
+        { "before": "ぬ", "after": "ななかったら" },
+        { "before": "ぶ", "after": "ばなかったら" },
+        { "before": "む", "after": "まなかったら" },
+      ],
+    },
+    "provisional": {
+      
+      forms: [
+        { "before": "る", "after": "れば" },
+        { "before": "つ", "after": "てば" },
+        { "before": "う", "after": "えば" },
+        { "before": "く", "after": "けば" },
+        { "before": "ぐ", "after": "げば" },
+        { "before": "す", "after": "せば" },
+        { "before": "ぬ", "after": "ねば" },
+        { "before": "ぶ", "after": "べば" },
+        { "before": "む", "after": "めば" },
+      ],
+    },
+
+    "provisional negative": {
+      
+      forms: [
+        { "before": "る", "after": "れなければ" },
+        { "before": "つ", "after": "てなければ" },
+        { "before": "う", "after": "えなければ" },
+        { "before": "く", "after": "けなければ" },
+        { "before": "ぐ", "after": "げなければ" },
+        { "before": "す", "after": "せなければ" },
+        { "before": "ぬ", "after": "ねなければ" },
+        { "before": "ぶ", "after": "べなければ" },
+        { "before": "む", "after": "めなければ" },
       ],
     },
 
@@ -886,6 +878,10 @@ var rules = {
     "polite past negative": { forms: [ { "before": "る", "after": "ませんでした" }, ], },
     "te-form": { forms: [ { "before": "る", "after": "て" }, ], },
     "te-form negative": { forms: [ { "before": "る", "after": "なくて" }, { "before": "る", "after": "ないで" } ], },
+    "conditional": { forms: [ { "before": "る", "after": "たら" }, ], },
+    "conditional negative": { forms: [ { "before": "る", "after": "なかったら" }, ], },
+    "provisional": { forms: [ { "before": "る", "after": "れば" }, ], },
+    "provisional negative": { forms: [ { "before": "る", "after": "なければ" }, ], },
     "potential": { forms: [ { "before": "る", "after": "られる" }, { "before": "る", "after": "れる" } ] },
     "potential negative": { forms: [ { "before": "る", "after": "られない" } ], },
     "polite potential": { forms: [ { "before": "る", "after": "られます" } ], },
@@ -941,6 +937,10 @@ var rules = {
     "polite past negative": { forms: [ { "result": "行[い]きませんでした" }, ], },
     "te-form": { forms: [ { "result": "行[い]って" }, ], },
     "te-form negative": { forms: [ { "result": "行[い]かなくて" }, { "result": "行[い]かないで" } ], },
+    "conditional": { forms: [ { "result": "行[い]ったら" }, ], },
+    "conditional negative": { forms: [ { "result": "行[い]かなかったら" }, ], },
+    "provisional": { forms: [ { "result": "行[い]けば" }, ], },
+    "provisional negative": { forms: [ { "result": "行[い]かなければ" }, ], },
     "potential": { forms: [ { "result": "行[い]ける" } ], },
     "potential negative": { forms: [ { "result": "行[い]けない" } ], },
     "polite potential": { forms: [ { "result": "行[い]けます" } ], },
@@ -996,6 +996,10 @@ var rules = {
     "polite past negative": { forms: [ { "result": "来[き]ませんでした" } ], },
     "te-form": { forms: [ { "result": "来[き]て" } ], },
     "te-form negative": { forms: [ { "result": "来[こ]なくて" }, { "result": "来[こ]ないで" } ], },
+    "conditional": { forms: [ { "result": "来[き]たら" } ], },
+    "conditional negative": { forms: [ { "result": "来[こ]なかったら" } ], },
+    "provisional": { forms: [ { "result": "来[く]れば" } ], },
+    "provisional negative": { forms: [ { "result": "来[こ]なければ" } ], },
     "potential": { forms: [ { "result": "来[こ]られる" } ], },
     "potential negative": { forms: [ { "result": "来[こ]られない" } ], },
     "polite potential": { forms: [ { "result": "来[こ]られます" } ], },
@@ -1045,6 +1049,10 @@ var rules = {
     "polite past negative": { forms: [ { "before": "する", "after": "しませんでした" }, ], },
     "te-form": { forms: [ { "before": "する", "after": "して" }, ], },
     "te-form negative": { forms: [ { "before": "する", "after": "しなくて" }, { "before": "する", "after": "しないで" } ], },
+    "conditional": { forms: [ { "before": "する", "after": "したら" }, ], },
+    "conditional negative": { forms: [ { "before": "する", "after": "しなかったら" }, ], },
+    "provisional": { forms: [ { "before": "する", "after": "すれば" }, ], },
+    "provisional negative": { forms: [ { "before": "する", "after": "しなければ" }, ], },
     "potential": { forms: [ { "before": "する", "after": "できる" } ], },
     "potential negative": { forms: [ { "before": "する", "after": "できない" } ], },
     "polite potential": { forms: [ { "before": "する", "after": "できます" } ], },
@@ -1088,6 +1096,96 @@ var rules = {
     "desire polite past negative": { forms: [ { "before": "する", "after": "したくなかったです" }, ], },
     "volitional": { forms: [ { "before": "する", "after": "しよう" }, ], },
     "polite volitional": { forms: [ { "before": "する", "after": "しましょう" }, ], },
+  },
+
+  "aru": {
+    "negative": { forms: [ { "result": "ない" } ], },
+    "polite": { forms: [ { "result": "あります" } ], },
+    "polite negative": { forms: [ { "result": "ありません" } ], },
+    "past": { forms: [ { "result": "あった" } ], },
+    "past negative": { forms: [ { "result": "なかった" } ], },
+    "polite past": { forms: [ { "result": "ありました" } ], },
+    "polite past negative": { forms: [ { "result": "ありませんでした" } ], },
+    "te-form": { forms: [ { "result": "あって" } ], },
+    "te-form negative": { forms: [ { "result": "なくて" }, { "result": "ないで" } ], },
+    "conditional": { forms: [ { "result": "あったら" } ], },
+    "conditional negative": { forms: [ { "result": "なかったら" } ], },
+    "provisional": { forms: [ { "result": "あれば" } ], },
+    "provisional negative": { forms: [ { "result": "なければ" } ], },
+    "potential": { forms: [ { "result": "あれる" } ], },
+    "potential negative": { forms: [ { "result": "あれない" } ], },
+    "polite potential": { forms: [ { "result": "あれます" } ], },
+    "polite potential negative": { forms: [ { "result": "あれません" } ], },
+    "imperative": { forms: [ { "result": "あれ" } ], },
+    "imperative negative": { forms: [ { "result": "あるな" } ], },
+    "passive": { forms: [ { "result": "あられる" } ], },
+    "passive negative": { forms: [ { "result": "あられない" } ], },
+    "passive past": { forms: [ { "result": "あられた" } ], },
+    "passive past negative": { forms: [ { "result": "あられなかった" } ], },
+    "passive te-form": { forms: [ { "result": "あられて" } ], },
+    "polite passive": { forms: [ { "result": "あられます" } ], },
+    "polite passive negative": { forms: [ { "result": "あられません" } ], },
+    "polite passive past": { forms: [ { "result": "あられました" } ], },
+    "polite passive past negative": { forms: [ { "result": "あられませんでした" } ], },
+    "causative": { forms: [ { "result": "あらせる" } ], },
+    "causative negative": { forms: [ { "result": "あらせない" } ], },
+    "causative past": { forms: [ { "result": "あらせた" } ], },
+    "causative past negative": { forms: [ { "result": "あらせなかった" } ], },
+    "causative passive": { forms: [ { "result": "あらせられる" } ], },
+    "causative passive negative": { forms: [ { "result": "あらせられない" } ], },
+    "causative passive past": { forms: [ { "result": "あらせられた" } ], },
+    "causative passive past negative": { forms: [ { "result": "あらせられなかった" } ], },
+    "volitional": { forms: [ { "result": "あろう" }, ], },
+    "polite volitional": { forms: [ { "result": "ありましょう" }, ], },
+    "provisional": { forms: [ { "result": "あれば" }, ], },
+    "provisional negative": { forms: [ { "result": "なければ" }, ], },
+    "conditional": { forms: [ { "result": "あったら" }, ], },
+    "conditional negative": { forms: [ { "result": "なかったら" }, ], },
+  },
+
+  "iru": {
+    "negative": { forms: [ { "result": "いない" } ], },
+    "polite": { forms: [ { "result": "います" } ], },
+    "polite negative": { forms: [ { "result": "いません" } ], },
+    "past": { forms: [ { "result": "いた" } ], },
+    "past negative": { forms: [ { "result": "いなかった" } ], },
+    "polite past": { forms: [ { "result": "いました" } ], },
+    "polite past negative": { forms: [ { "result": "いませんでした" } ], },
+    "te-form": { forms: [ { "result": "いて" } ], },
+    "te-form negative": { forms: [ { "result": "いなくて" }, { "result": "いないで" } ], },
+    "conditional": { forms: [ { "result": "いたら" } ], },
+    "conditional negative": { forms: [ { "result": "いなかったら" } ], },
+    "provisional": { forms: [ { "result": "いれば" } ], },
+    "provisional negative": { forms: [ { "result": "いなければ" } ], },
+    "potential": { forms: [ { "result": "いられる" } ], },
+    "potential negative": { forms: [ { "result": "いられない" } ], },
+    "polite potential": { forms: [ { "result": "いられます" } ], },
+    "polite potential negative": { forms: [ { "result": "いられません" } ], },
+    "imperative": { forms: [ { "result": "いよ" }, { "result": "いろ" } ], },
+    "imperative negative": { forms: [ { "result": "いるな" } ], },
+    "passive": { forms: [ { "result": "あられる" } ], },
+    "passive negative": { forms: [ { "result": "あられない" } ], },
+    "passive past": { forms: [ { "result": "あられた" } ], },
+    "passive past negative": { forms: [ { "result": "あられなかった" } ], },
+    "passive te-form": { forms: [ { "result": "あられて" } ], },
+    "polite passive": { forms: [ { "result": "あられます" } ], },
+    "polite passive negative": { forms: [ { "result": "あられません" } ], },
+    "polite passive past": { forms: [ { "result": "あられました" } ], },
+    "polite passive past negative": { forms: [ { "result": "あられませんでした" } ], },
+    "causative": { forms: [ { "result": "あらせる" } ], },
+    "causative negative": { forms: [ { "result": "あらせない" } ], },
+    "causative past": { forms: [ { "result": "あらせた" } ], },
+    "causative past negative": { forms: [ { "result": "あらせなかった" } ], },
+    "causative passive": { forms: [ { "result": "あらせられる" } ], },
+    "causative passive negative": { forms: [ { "result": "あらせられない" } ], },
+    "causative passive past": { forms: [ { "result": "あらせられた" } ], },
+    "causative passive past negative": { forms: [ { "result": "あらせられなかった" } ], },
+    "volitional": { forms: [ { "result": "あろう" }, ], },
+    "polite volitional": { forms: [ { "result": "ありましょう" }, ], },
+    "provisional": { forms: [ { "result": "あれば" }, ], },
+    "provisional negative": { forms: [ { "result": "なければ" }, ], },
+    "conditional": { forms: [ { "result": "あったら" }, ], },
+    "conditional negative": { forms: [ { "result": "なかったら" }, ], },
   },
 
   "i-adjective": {
@@ -1169,7 +1267,10 @@ function calculateAllConjugations() {
 
   Object.keys(words).forEach(function (word) {
     
-    words[word].conjugations = { "dictionary": { forms: [words[word].dictionary] } };
+    words[word].conjugations = {
+      "dictionary": { forms: [words[word].dictionary] },
+    };
+  
 
     var group = words[word].group;
 
@@ -1178,3 +1279,5 @@ function calculateAllConjugations() {
     })
   });
 }
+
+export default calculateAllConjugations;
