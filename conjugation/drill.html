@@ -7,7 +7,6 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
   <link rel="stylesheet" href="drill.css" type="text/css" media="screen">
-<<<<<<< HEAD
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
@@ -15,12 +14,7 @@
   <script defer type="text/ecmascript" src="//code.jquery.com/jquery-3.1.1.min.js"></script>
   <script defer type="module" src="rules.js"></script>
   <script defer type="module" src="drill.js"></script>
-=======
-  <link href="https://fonts.googleapis.com/css?family=Amaranth" rel="stylesheet">
-  <script type="text/ecmascript" src="//code.jquery.com/jquery-3.1.1.min.js"></script>
-  <script type="module" src="rules.js"></script>
-  <script type="module" src="drill.js"></script>
->>>>>>> 9859022 (edit as module not script)
+
   <title>LanDon's Japanese Conjugation Drill</title>
 </head>
 
@@ -291,9 +285,17 @@
     <div class="row ml-4 mr-4">
 
       <div style="display: none" id="explanation" class="mt-4 col mx-auto">
-        <h3>Explanation</h3>
-
-        <p><span id="explain-given"></span> - meaning: <span id="explain-meaning"></span>.</p>
+        <h4>Root Word</h4>
+        <div class="explain-answer-single">
+          <p><span id="explain-given-base"></span> - meaning: <span id="explain-meaning"></span>.</p>
+          <div class="indented">
+            <p><span class="emphasis2"><span id="explain-sentence-jp"></span></span><br>
+            <span class="subtext2"><span id="explain-sentence-en"></span></span></p>
+          </div>
+          <div>
+            <p><span id="explain-notes"></span>
+          </div>
+        </div>
 
         <h3>1. Recognise the given form</h3>
 

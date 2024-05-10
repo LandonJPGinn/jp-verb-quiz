@@ -1,14 +1,6 @@
 // drill.js
-<<<<<<< HEAD
 import words from './words.js';
 import calculateAllConjugations from './rules.js';
-=======
-import {
-  calculateConjugations,
-  calculateAllConjugations
-} from './rules.js';
-
->>>>>>> ed068be (Connect functions)
 
 var transformations = [];
 
@@ -334,7 +326,7 @@ function validQuestion(entry, forms, transformation, options) {
     if (options.questionFocus != "none") {
 
       if (options.questionFocus == 'tetakei') {
-        console.log("tetakei", words[entry].conjugations[transformation.from].tetakei, words[entry].conjugations[transformation.to].tetakei)
+        // console.log("tetakei", words[entry].conjugations[transformation.from].tetakei, words[entry].conjugations[transformation.to].tetakei)
         if (words[entry].conjugations[transformation.from].tetakei == words[entry].conjugations[transformation.to].tetakei) {
           valid = false;
         }
@@ -493,7 +485,11 @@ function generateQuestion() {
   };
 
   var dictionary = words[data.entry].conjugations["dictionary"].forms;
-  // var meaning = words[data.entry].conjugations["meaning"].forms;
+  var meaning = words[data.entry].meaning;
+  var sentenceJP = words[data.entry].sentences[0];
+  var sentenceEN = words[data.entry].sentences[1];
+  var notes = words[data.entry].notes[0];
+  var audio = words[data.entry].audio;
 
   if (words[data.entry].group == "na-adjective") {
     for (var i = 0; i < dictionary.length; i++) {
@@ -506,7 +502,12 @@ function generateQuestion() {
   } else {
     dictionary = kanaForm(dictionary);
   }
-  $('#explain-meaning').html("WIP");
+  $('#explain-audio').html(audio);
+  $('#explain-given-base').html(dictionary);
+  $('#explain-notes').html(notes);
+  $('#explain-meaning').html(meaning);
+  $('#explain-sentence-jp').html(sentenceJP);
+  $('#explain-sentence-en').html(sentenceEN);
   $('#explain-given').html(givenWord);
   $('#explain-given-tags').html(data.transformation.from_tags.map(function (tag) { return "<span class='tag'>" + tag + "</span>"; }).join(" "));
   $('.explain-given-dictionary').html(dictionary);
@@ -560,8 +561,8 @@ function processAnswer() {
 
   var questionData = window.questionData;
   var response = $('#answer').val().trim();
-  console.log("answer provided", response);
-  console.log("questionData", questionData.answer);
+  // console.log("answer provided", response);
+  // console.log("questionData", questionData.answer);
 
   var shake = false;
 
@@ -577,7 +578,7 @@ function processAnswer() {
   }
 
   var correct = ((questionData.answer.indexOf(response) != -1) || (questionData.answer2.indexOf(response) != -1));
-  console.log("correct", correct);
+  // console.log("correct", correct);
 
   var klass = correct ? "correct" : "incorrect";
 
