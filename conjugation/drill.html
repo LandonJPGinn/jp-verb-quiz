@@ -53,7 +53,7 @@
               <option value="volitional">Volitional</option>
               <option value="potential">Potential</option>
               <option value="conditional">Conditional(たら)</option>
-              <option value="provisional">Provisional</option>
+              <option value="provisional">Provisional Conditional(ば)</option>
               <option value="imperative">Imperative</option>
               <option value="passive">Passive</option>
               <option value="causative">Causative</option>
@@ -72,6 +72,10 @@
         <button class="btn btn-secondary col-12" type="button" id="defaults">Reset</button>
       </div>
     </div>
+
+    
+    <div class="text-center mb-4">Question pool size: <span id="questionCount">...</span></div>
+
 
     <div id="voiceSelectError" style="display: none">
         <div class="row justify-content-center mb-2 ml-2 mr-2">
@@ -108,7 +112,7 @@
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
                   id="conditional"><label for="conditional" class="form-check-label">Conditional(たら)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
-                  id="provisional"><label for="provisional" class="form-check-label">Provisional</label></div>
+                  id="provisional"><label for="provisional" class="form-check-label">Provisional Conditional(ば)</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
                   id="imperative"><label for="imperative" class="form-check-label">Imperative</label></div>
               <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="passive"><label
@@ -136,12 +140,12 @@
                       checked><label for="iku" class="form-check-label">行く verb</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="kuru"
                       checked><label for="kuru" class="form-check-label">来る verb</label></div>
-                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="suru"
-                      checked><label for="suru" class="form-check-label">する verbs</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="aru"
                       checked><label for="aru" class="form-check-label">ある verb</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iru"
                       checked><label for="iru" class="form-check-label">いる verbs</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="suru"
+                      checked><label for="suru" class="form-check-label">する verbs</label></div>
                 </div>
               </div>
             </div>
@@ -181,8 +185,6 @@
     <div id="politePlainError" style="display: none">
         <div class="text-center mb-2">You must select at least one of 'Plain' and 'Polite'.</div>
     </div>
-
-    <div class="text-center mb-4">Question pool size: <span id="questionCount">...</span></div>
 
     <div class="row justify-content-center mt-3 ml-2 mr-2">
         <div id="voice_select_options" class="form-check" style="display: none">
