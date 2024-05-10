@@ -1,13 +1,22 @@
 :root {
   --primary-colour: #285185;
 }
+/* Colors Changed to match Japanese official colors: https://project-japan.jp/japanese-traditional-colors-purple/ */
+/* Edomurasaki: #77428D;
+Kuro: #462b42;
+Shikon: #410845;
+Kurenai: #992a2a;
+Midori: #217b21;
+Kohaku: #995c2a;
+Shiro: white; */
+
 
 body, input {
   font-family: "Noto Sans JP", sans-serif;
-  background: #e4e8eb;
+  background: #dbe0e4;
 
-  --other: #4A2067;
-  --neutral-dark: #441f00;
+  --other: #77428D;
+  --neutral-dark: #410845;
   --incorrect: #992a2a;
   --correct: #217b21;
   --neutral: #995c2a;
@@ -133,6 +142,7 @@ body, input {
   margin-right: auto;
   margin-top: 16px;
   margin-bottom: 16px;
+  border-radius: .5rem;
 }
 
 #answer {
@@ -176,6 +186,7 @@ body, input {
   width: calc(100vw - 32px);
   margin-left: auto;
   margin-right: auto;
+  border-radius: .5rem;
 
   padding-top: 12px;
   padding-bottom: 12px;
@@ -247,7 +258,7 @@ h2, h4 {
 }
 
 .shake {
-  animation: shake 0.75s;
+  animation: shake 0.36s;
   animation-iteration-count: 1;
 }
 
@@ -269,7 +280,7 @@ dl.questionOptions dd {
 }
 
 #quizSection span.emphasis {
-  color: #c0c0ff;
+  color: #ffb055;
 }
 
 #quizSection span.first,
@@ -331,4 +342,23 @@ div.halfSpeed {
 .progressBar {
   height: 5px;
   background: white;
+}
+
+.emphasis2 {
+  font-style: italic;
+}
+
+.subtext2 {
+  font-size: 0.8em;
+  font-style: bold;
+  vertical-align: super;
+  line-height: 1.0;
+}
+
+.indented {
+  margin-left: 1em;
+  padding-left: 1em;
+  padding-top: .2em;
+  background-color: #ebf1f7;
+  border-radius: .5rem;
 }
