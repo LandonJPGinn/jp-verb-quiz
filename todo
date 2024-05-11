@@ -2,9 +2,21 @@
 
 
 Next Up:
-- [ ] Add support for filtering by meta data ( jlpt, common, industry, etc)
+- [x] Add support for filtering by meta data ( jlpt, common, industry, etc)
     - [ ] Question Count should work off of a cache not dynamic reading ( cicd )
+        get total count for each group
+        get a list of each group
+        get a list of each filter
+        see if you can get a list of each groups rule permutations (rules file has a certain amount of conjugations per group.)
+
+then use that to filter, not tags.
+
 - [ ] Add conditional/provisional to adjectives
+
+
+# This will be a more involved step
+## May need to transfer files to a db or spreadsheet
+
 - [ ] Add Top 100 most common verbs
 - [ ] Add all verbs
 - [ ] Add top 100 most common adjectives

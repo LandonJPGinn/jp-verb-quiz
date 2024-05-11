@@ -52,7 +52,7 @@ const defaultConfig = {
   "furigana_always": true,
   "use_voice": false,
   "common": true,
-  "n5": false,
+  "n5": true,
   "n4": false,
   "n3": false,
   "n2": false,
@@ -1036,21 +1036,39 @@ function calculateTransitions() {
 function updateOptionSummary() {
 
   // Calculate how many questions will apply
+  // Use the json count 
 
   var options = getOptions();
   var applicable = 0;
+  var permutations = 0;
 
-  Object.keys(words).forEach(function (word) {
-
-    var forms = getVerbForms(word);
-
-    transformations.forEach(function (transformation) {
-
-      if (validQuestion(word, forms, transformation, options)) {
-        applicable++;
+  Object.entries(options).forEach(function ([key, value]) {
+    // console.log(key, value);
+    if (value == 1 || value == true) {
+      permutations++;
+      if (count[key]) {
+        // console.log(key);
+        // console.log(count[key]);
+        applicable += count[key];
       }
-    });
+    }
   });
+  // console.log("total word count", count['total_word_count']);
+  // console.log("permutations", permutations);
+  applicable = applicable * permutations;
+  // console.log(applicable);
+  // console.log("\n\nCount Complete\n");
+  // Object.keys(words).forEach(function (word) {
+
+  //   var forms = getVerbForms(word);
+
+  //   transformations.forEach(function (transformation) {
+
+  //     if (validQuestion(word, forms, transformation, options)) {
+  //       applicable++;
+  //     }
+  //   });
+  // });
 
   $("#questionCount").text(applicable);
 

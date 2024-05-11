@@ -5,7 +5,8 @@ from collections import Counter
 with open('words.json','r', encoding="utf-8")as f:
     words = json.load(f)
 
-results = Counter()
+word_count = len(words)
+results = Counter({"total_word_count": word_count})
 
 for k,v in words.items():
     results += Counter(v['tags'])
