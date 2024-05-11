@@ -1,6 +1,10 @@
 // drill.js
 import words from './words.js';
 import calculateAllConjugations from './rules.js';
+import count from './count.json' assert { type: 'json' };
+
+
+console.log(count);
 
 var transformations = [];
 
@@ -315,6 +319,24 @@ function validQuestion(entry, forms, transformation, options) {
     valid = false;
   }
 
+  var pass = true;
+  if (!options.n5 && !options.n4 && !options.n3 && !options.n2 && !options.n1 && !options.common) {
+    // noOp
+  } else {
+    pass = false;
+    for (const [key, value] of Object.entries(options)) {
+      if (value == true && words[entry].tags.includes(key)) {
+        pass = true;
+      }
+    }
+  }
+  
+  if (!pass) {
+    valid = false;
+  }
+
+
+
   if (!forms["furigana"][transformation.from])
     valid = false;
 
@@ -380,7 +402,7 @@ function generateQuestion() {
 
   while (true) {
 
-    if (count++ == 10000) {
+    if (count++ == 100) {
       showSplash();
       return;
     }
@@ -490,6 +512,9 @@ function generateQuestion() {
   var sentenceEN = words[data.entry].sentences[1];
   var notes = words[data.entry].notes[0];
   var audio = words[data.entry].audio;
+
+  var anchor = document.getElementById('jisho-link');
+  anchor.setAttribute('href', 'https://jisho.org/search/' + sentenceJP);
 
   if (words[data.entry].group == "na-adjective") {
     for (var i = 0; i < dictionary.length; i++) {

@@ -3,6 +3,7 @@
 
 Next Up:
 - [ ] Add support for filtering by meta data ( jlpt, common, industry, etc)
+    - [ ] Question Count should work off of a cache not dynamic reading ( cicd )
 - [ ] Add conditional/provisional to adjectives
 - [ ] Add Top 100 most common verbs
 - [ ] Add all verbs
