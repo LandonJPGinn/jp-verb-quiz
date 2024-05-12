@@ -363,3 +363,7 @@ div.halfSpeed {
   background-color: #ebf1f7;
   border-radius: .5rem;
 }
+
+.warning {
+  color: red;
+}
