@@ -749,7 +749,9 @@ export default function checkAnswer() {
   processAnswer();
 }
 
-function startQuiz() {
+function startQuiz(event) {
+  event.preventDefault();
+  console.log(event);
 
   var options = getOptions();
 
