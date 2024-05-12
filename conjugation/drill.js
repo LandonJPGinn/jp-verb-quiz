@@ -1199,7 +1199,7 @@ $('window').ready(function () {
   loadOptions();
   restoreDefaults();
 
-  $('#go').click(startQuiz);
+  $('#go').on('click touchstart touchmove', startQuiz);
   $('#defaults').click(restoreDefaults);
   $('#backToStart').click(showSplash);
 
