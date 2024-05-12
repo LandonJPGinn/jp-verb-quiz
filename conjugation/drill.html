@@ -130,22 +130,24 @@
             <div class="col-md-6 text-center">
               <div class="form-group">
                 <div style="display: inline-block">
-                  <h4 class="text-left mt-2 mb-4">Verbs</h4>
+                  <h4 class="text-left mt-2 mb-4">Regular Verbs</h4>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="godan"
                       checked><label for="godan" class="form-check-label">Godan verbs</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="ichidan"
                       checked><label for="ichidan" class="form-check-label">Ichidan verbs</label></div>
-                  <div class="text-left ml-1 specials">Special cases</div>
-                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iku"
-                      checked><label for="iku" class="form-check-label">行く verb</label></div>
+
+                  <div class="text-left ml-1 specials">Irregular Verbs</div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="suru"
+                    checked><label for="suru" class="form-check-label">する verbs</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="kuru"
                       checked><label for="kuru" class="form-check-label">来る verb</label></div>
+                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iku"
+                      checked><label for="iku" class="form-check-label">行く verb</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="aru"
                       checked><label for="aru" class="form-check-label">ある verb</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="iru"
                       checked><label for="iru" class="form-check-label">いる verbs</label></div>
-                  <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="suru"
-                      checked><label for="suru" class="form-check-label">する verbs</label></div>
+
                 </div>
               </div>
             </div>
@@ -158,7 +160,7 @@
                       id="i-adjective"><label for="i-adjective" class="form-check-label">い adjectives</label></div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox"
                       id="na-adjective"><label for="na-adjective" class="form-check-label">な adjectives</label></div>
-                  <div class="text-left ml-1 specials">Special cases</div>
+                  <div class="text-left ml-1 specials">Irregular Adjectives</div>
                   <div class="text-left ml-1 form-check"><input class="form-check-input" type="checkbox" id="ii"><label
                       for="ii" class="form-check-label">いい adjective</label></div>
                   <div class="text-left ml-1 specials">Filters</div>
@@ -185,6 +187,10 @@
     <div id="politePlainError" style="display: none">
         <div class="text-center mb-2">You must select at least one of 'Plain' and 'Polite'.</div>
     </div>
+
+    <div id="noQuestionError" style="display: none">
+      <div class="text-center mb-2">Not enough available questions.</div>
+  </div>
 
     <div class="row justify-content-center mt-3 ml-2 mr-2">
         <div id="voice_select_options" class="form-check" style="display: none">

@@ -6,6 +6,7 @@ import grp_sample from './grp_sample.json' assert { type: 'json' };
 
 
 var transformations = [];
+var question_pool = [];
 
 var log;
 
@@ -160,7 +161,6 @@ function getVerbForms(entry) {
     "hiragana": {},
     "furigana": {}
   };
-
   Object.keys(words[entry].conjugations).forEach(function (key) {
     result["kanji"][key] = kanjiForm(words[entry].conjugations[key].forms);
     result["hiragana"][key] = kanaForm(words[entry].conjugations[key].forms);
@@ -397,17 +397,22 @@ function generateQuestion() {
   var from_form;
   var forms;
   var options = getOptions();
-
+  var word_selection = question_pool.slice();
   var count = 0;
-
+  
   while (true) {
 
-    if (count++ == 100) {
+    if (count++ == 800) {
       showSplash();
       return;
     }
 
-    entry = Object.keys(words).randomElement();
+    entry = word_selection.randomElement();
+    if (entry === undefined) {
+      word_selection = question_pool.slice();
+      entry = word_selection.randomElement();
+    }
+    
     var transformation = transformations.randomElement();
 
     from_form = transformation.from;
@@ -416,6 +421,11 @@ function generateQuestion() {
     forms = getVerbForms(entry);
 
     var valid = validQuestion(entry, forms, transformation, getOptions());
+
+    if (!valid) {
+      var index = word_selection.indexOf(entry);
+      word_selection.splice(index, 1);
+    }
 
     // Modify the chance of trick questions so that they appear on average 25%
     // of the time. When trick questions are active then 50% of the
@@ -1033,8 +1043,22 @@ function calculateTransitions() {
   transformations = transformations.concat(trick_forms);
 }
 
-function updateOptionSummary() {
 
+function updateQuestionPool() {
+  var options = getOptions();
+  var active_options = Object.keys(options).filter(function (key) { return options[key] == true; });
+  question_pool = [];
+
+  Object.keys(words).forEach(function (word) {
+    if (active_options.includes(words[word].group)) {
+      question_pool.push(word);
+      return;
+    }
+  });
+}
+
+function updateOptionSummary() {
+  updateQuestionPool();
   // Calculate how many questions will apply
   // Use the json count_dict 
   var applicable = 0;
@@ -1044,18 +1068,24 @@ function updateOptionSummary() {
   Object.keys(grp_sample).forEach(function (word) {
 
     var forms = getVerbForms(word);
+    let modifier = 0;
 
     transformations.forEach(function (transformation) {
 
       if (validQuestion(word, forms, transformation, options)) {
-        // This is calculating too much
-        var modifier = count_dict[grp_sample[word].group];
+        modifier = count_dict[grp_sample[word].group];
         applicable += modifier;
       }
     });
   });
 
   $("#questionCount").text(applicable);
+
+  if (applicable < $('#numQuestions').val()) {
+    document.querySelector('#noQuestionError').style.display = 'block';
+  } else {
+    document.querySelector('#noQuestionError').style.display = 'none';
+  }
 
   if (!options.plain && !options.polite) {
     document.querySelector('#politePlainError').style.display = 'block';
@@ -1187,27 +1217,3 @@ $('window').ready(function () {
 window.processAnswer = processAnswer;
 window.proceed = proceed;
 window.explain = explain;
-// window.checkAnswer = checkAnswer;
-// window.startQuiz = startQuiz;
-// window.endQuiz = endQuiz;
-// window.updateVoiceSelect = updateVoiceSelect;
-// window.updateVoiceSelection = updateVoiceSelection;
-// window.loadOptions = loadOptions;
-// window.restoreDefaults = restoreDefaults;
-// window.updateOptionSummary = updateOptionSummary;
-// window.saveOptions = saveOptions;
-// window.calculateTransitions = calculateTransitions;
-// window.getOptions = getOptions;
-// window.loadVoiceList = loadVoiceList;
-// window.populateVoiceList = populateVoiceList;
-// window.textToSpeech = textToSpeech;
-// window.arrayDifference = arrayDifference;
-// window.arrayUnique = arrayUnique;
-// window.updateProgressBar = updateProgressBar;
-// window.updateHistoryView = updateHistoryView;
-// window.resetLog = resetLog;
-// window.commaList = commaList;
-// window.wordWithFurigana = wordWithFurigana;
-// window.kanaForm = kanaForm;
-// window.getVoiceConfig = getVoiceConfig;
-// document.querySelector('quizForm').addEventListener('action', processAnswer);

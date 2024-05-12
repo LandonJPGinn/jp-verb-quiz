@@ -2,10 +2,6 @@
 
 
 Next Up:
-
-- [ ] Get the counter to math properly
-- [ ] Disable the Go Button when the pool is too small (give it a note)
-
 # very time consuming step, may require a spreadsheet
 - [ ] Add Top 100 most common verbs
 - [ ] Add all verbs
@@ -14,20 +10,23 @@ Next Up:
 
 
 Complete:
-- [X] Add hover to see meaning - included in explanation
+- [X] Add hover to see meaning - included in explanation instead
 - [X] decouple verb db
 - [X] add aru and iru
 - [X] add conditional -tara
 - [X] add provisional conditional -eba
 - [X] color face lift - minor
 - [X] Add support for random generated sentences with simple A is B and A does B structures - provide exampe sentence
-- [x] Add support for filtering by meta data ( jlpt, common, industry, etc)
 - [x] Question Count should work off of a cache not dynamic reading ( cicd )
+- [x] Get the counter to math properly
+- [x] fix bug that randomly chooses a word and validates it to find one that applies.
+    this is causes issues when there are hundreds of words but our options only allows one
 
 
 Ideas:
 - Add da (desu)
-- dyanmically generated sentence based on correct answer form
+- dynamically generated sentence based on correct answer form
 - add option to see what they even did
+- [ ] Add support for filtering by meta data ( jlpt, common, industry, etc)
 
 
