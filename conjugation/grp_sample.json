@@ -1,0 +1,42 @@
+{
+    "なる": {
+        "group": "godan",
+        "dictionary": "なる"
+    },
+    "上げる": {
+        "group": "ichidan",
+        "dictionary": "上[あ]げる"
+    },
+    "行く": {
+        "group": "iku",
+        "dictionary": "行[い]く"
+    },
+    "ある": {
+        "group": "aru",
+        "dictionary": "ある"
+    },
+    "いる": {
+        "group": "iru",
+        "dictionary": "いる"
+    },
+    "する": {
+        "group": "suru",
+        "dictionary": "する"
+    },
+    "高い": {
+        "group": "i-adjective",
+        "dictionary": "高[たか]い"
+    },
+    "来る": {
+        "group": "kuru",
+        "dictionary": "来[く]る"
+    },
+    "いい": {
+        "group": "ii",
+        "dictionary": "いい"
+    },
+    "有名": {
+        "group": "na-adjective",
+        "dictionary": "有[ゆう]名[めい]だ"
+    }
+}

@@ -1,10 +1,9 @@
 // drill.js
 import words from './words.js';
 import calculateAllConjugations from './rules.js';
-import count from './count.json' assert { type: 'json' };
+import count_dict from './count.json' assert { type: 'json' };
+import grp_sample from './grp_sample.json' assert { type: 'json' };
 
-
-console.log(count);
 
 var transformations = [];
 
@@ -269,6 +268,7 @@ function processAnswerKey() {
     "dya": "ぢゃ", "dyi": "ぢぃ", "dyu": "ぢゅ", "dye": "ぢぇ", "dyo": "ぢょ",
     "bya": "びゃ", "byi": "びぃ", "byu": "びゅ", "bye": "びぇ", "byo": "びょ",
     "pya": "ぴゃ", "pyi": "ぴぃ", "pyu": "ぴゅ", "pye": "ぴぇ", "pyo": "ぴょ",
+    "jiu": "じゅう", "jyu": "じゅ", "jyo": "じょ",
 
     "shi": "し",
     "tsu": "つ",
@@ -1036,39 +1036,24 @@ function calculateTransitions() {
 function updateOptionSummary() {
 
   // Calculate how many questions will apply
-  // Use the json count 
+  // Use the json count_dict 
+  var applicable = 0;
 
   var options = getOptions();
-  var applicable = 0;
-  var permutations = 0;
 
-  Object.entries(options).forEach(function ([key, value]) {
-    // console.log(key, value);
-    if (value == 1 || value == true) {
-      permutations++;
-      if (count[key]) {
-        // console.log(key);
-        // console.log(count[key]);
-        applicable += count[key];
+  Object.keys(grp_sample).forEach(function (word) {
+
+    var forms = getVerbForms(word);
+
+    transformations.forEach(function (transformation) {
+
+      if (validQuestion(word, forms, transformation, options)) {
+        // This is calculating too much
+        var modifier = count_dict[grp_sample[word].group];
+        applicable += modifier;
       }
-    }
+    });
   });
-  // console.log("total word count", count['total_word_count']);
-  // console.log("permutations", permutations);
-  applicable = applicable * permutations;
-  // console.log(applicable);
-  // console.log("\n\nCount Complete\n");
-  // Object.keys(words).forEach(function (word) {
-
-  //   var forms = getVerbForms(word);
-
-  //   transformations.forEach(function (transformation) {
-
-  //     if (validQuestion(word, forms, transformation, options)) {
-  //       applicable++;
-  //     }
-  //   });
-  // });
 
   $("#questionCount").text(applicable);
 

@@ -2,29 +2,18 @@
 
 
 Next Up:
-- [x] Add support for filtering by meta data ( jlpt, common, industry, etc)
-    - [ ] Question Count should work off of a cache not dynamic reading ( cicd )
-        get total count for each group
-        get a list of each group
-        get a list of each filter
-        see if you can get a list of each groups rule permutations (rules file has a certain amount of conjugations per group.)
 
-then use that to filter, not tags.
+- [ ] Get the counter to math properly
+- [ ] Disable the Go Button when the pool is too small (give it a note)
 
-- [ ] Add conditional/provisional to adjectives
-
-
-# This will be a more involved step
-## May need to transfer files to a db or spreadsheet
-
+# very time consuming step, may require a spreadsheet
 - [ ] Add Top 100 most common verbs
 - [ ] Add all verbs
 - [ ] Add top 100 most common adjectives
 - [ ] Add all adjectives
 
 
-Complete
-
+Complete:
 - [X] Add hover to see meaning - included in explanation
 - [X] decouple verb db
 - [X] add aru and iru
@@ -32,12 +21,13 @@ Complete
 - [X] add provisional conditional -eba
 - [X] color face lift - minor
 - [X] Add support for random generated sentences with simple A is B and A does B structures - provide exampe sentence
-
+- [x] Add support for filtering by meta data ( jlpt, common, industry, etc)
+- [x] Question Count should work off of a cache not dynamic reading ( cicd )
 
 
 Ideas:
 - Add da (desu)
 - dyanmically generated sentence based on correct answer form
-
+- add option to see what they even did
 
 
