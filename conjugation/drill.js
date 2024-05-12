@@ -751,7 +751,6 @@ export default function checkAnswer() {
 
 function startQuiz(event) {
   event.preventDefault();
-  console.log(event);
 
   var options = getOptions();
 

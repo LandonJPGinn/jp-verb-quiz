@@ -1273,7 +1273,6 @@ function calculateAllConjugations() {
   
 
     var group = words[word].group;
-
     Object.keys(rules[group]).forEach(function (conjugation) {
       words[word].conjugations[conjugation] = calculateConjugations(word, conjugation);
     })

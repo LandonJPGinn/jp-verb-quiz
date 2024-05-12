@@ -66,10 +66,10 @@
 
     <div class="row justify-content-center mb-4 mt-4">
       <div class="col-4">
-        <button class="btn btn-primary col-12" type="button" id="go">Go</button>
+        <button class="btn btn-primary col-12" type="button" id="go" onclick="event.preventDefault();">Go</button>
       </div>
       <div class="col-4">
-        <button class="btn btn-secondary col-12" type="button" id="defaults">Reset</button>
+        <button class="btn btn-secondary col-12" type="button" id="defaults" onclick="event.preventDefault();">Reset</button>
       </div>
     </div>
 
@@ -215,6 +215,9 @@
             class="form-check-label" for="use_voice">Use speech synthesis (experimental)</label></div> -->
       </div>
     </div>
+    <div class="row justify-content-center mt-3 ml-2 mr-2">
+      <p>Want to leave some feedback? <a href="https://forms.gle/QeJ33fNda7SD79b89" target="_blank" rel="noopener noreferrer">Report an issue here</a>.</p>
+    </div> 
 
   </div>
 
@@ -343,6 +346,11 @@
           <ul class="explain-answer-as-list"></ul>
         </div>
 
+        <div class="explain-answer-single">
+          <p>
+            Find an issue? <a href="https://forms.gle/QeJ33fNda7SD79b89" target="_blank" rel="noopener noreferrer">Report it here</a>.
+          </p>
+        </div>
         <div class="row col-12 mt-4">
           <button id="explain-proceed-button" class="centre btn btn-primary mb-2 mx-auto"
             onclick="javascript:proceed()">OK, next question</button>
