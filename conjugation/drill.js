@@ -1,19 +1,12 @@
 // drill.js
-// import words from './words.js';
-import rules from './rules.js';
-// import count_dict from './count.json' assert { type: 'json' };
-// import grp_sample from './grp_sample.json' assert { type: 'json' };
 
+import rules from './rules.js';
 
 var words;
 var count_dict;
 var grp_sample;
-
-
-
 var transformations = [];
 var question_pool = [];
-
 var log;
 
 const configOptions = {
@@ -1243,11 +1236,9 @@ function calculateAllConjugations() {
     var group = words[word].group;
     Object.keys(rules[group]).forEach(function (conjugation) {
       words[word].conjugations[conjugation] = calculateConjugations(word, conjugation);
-
     })
   });
 }
-
 
 $('window').ready(function () {
 
