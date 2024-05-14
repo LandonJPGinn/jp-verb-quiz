@@ -1,8 +1,6 @@
 // Calculate conjugated forms using a rule set
 // 2024 updated by Landon Ginn
 
-import words from './words.js';
-
 var rules = {
 
   "godan": {
@@ -1220,63 +1218,5 @@ var rules = {
   },
 };
 
-function calculateConjugations(word, conjugation) {
 
-  if (words[word] == undefined)
-    return undefined;
-
-  var group = words[word].group;
-  var dictionary = words[word].dictionary;
-
-  if (conjugation == 'dictionary')
-    return dictionary;
-
-  if (rules[group] == undefined)
-    return undefined;
-
-  if (rules[group][conjugation] == undefined)
-    return undefined;
-
-  var conjugations = rules[group][conjugation].forms;
-
-  var result = {
-    forms: []
-  };
-
-  if (rules[group][conjugation].tetakei) {
-    result.tetakei = true;
-  }
-
-  conjugations.forEach(function (rule) {
-
-    if (rule.before && rule.after) {
-      if (dictionary.endsWith(rule.before)) {
-        result.forms.push(dictionary.substring(0, dictionary.length - rule.before.length) + rule.after);
-      }
-    }
-
-    if (rule.result) {
-      result.forms.push(rule.result);
-    }
-  });
-
-  return result;
-}
-
-function calculateAllConjugations() {
-
-  Object.keys(words).forEach(function (word) {
-    
-    words[word].conjugations = {
-      "dictionary": { forms: [words[word].dictionary] },
-    };
-  
-
-    var group = words[word].group;
-    Object.keys(rules[group]).forEach(function (conjugation) {
-      words[word].conjugations[conjugation] = calculateConjugations(word, conjugation);
-    })
-  });
-}
-
-export default calculateAllConjugations;
+export default rules;
