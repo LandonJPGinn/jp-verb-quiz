@@ -1,13 +1,12 @@
 // drill.js
-import words from './words.js';
+
 import rules from './rules.js';
-import count_dict from './count.json' assert { type: 'json' };
-import grp_sample from './grp_sample.json' assert { type: 'json' };
 
-
+var words;
+var count_dict;
+var grp_sample;
 var transformations = [];
 var question_pool = [];
-
 var log;
 
 const configOptions = {
@@ -921,7 +920,6 @@ function calculateTransitions() {
   var allTags = {};
 
   Object.keys(words).forEach(function (word) {
-
     Object.keys(words[word].conjugations).forEach(function (conjugation) {
 
       if (conjugation == "dictionary") {
@@ -1184,7 +1182,6 @@ function loadOptions() {
   }
 }
 
-
 function calculateConjugations(word, conjugation) {
 
   if (words[word] == undefined)
@@ -1224,7 +1221,6 @@ function calculateConjugations(word, conjugation) {
       result.forms.push(rule.result);
     }
   });
-
   return result;
 }
 
@@ -1246,33 +1242,80 @@ function calculateAllConjugations() {
 
 $('window').ready(function () {
 
+  showLoadingIndicator();
+
+  var promises = [];
+
+
+  var promise1 = $.getJSON("./words.json")
+    .done(function(data) {
+      words = data;
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+      console.error('error loading words', textStatus, errorThrown);
+    });
+  
+  promises.push(promise1);
+
+  var promise2 = $.getJSON("./count.json")
+    .done(function(data) {
+      count_dict = data;
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+      console.error('error loading words', textStatus, errorThrown);
+    });
+
+  promises.push(promise2);
+
+  var promise3 = $.getJSON("./grp_sample.json")
+      .done(function(data) {
+        grp_sample = data;
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        console.error('error loading words', textStatus, errorThrown);
+      });
+    
+    promises.push(promise3);
+
+  $.when.apply($, promises).done(function() {
+    hideLoadingIndicator();
+  });
+  function showLoadingIndicator() {
+    // console.log("loading....");
+  }
+  function hideLoadingIndicator() {
+    // console.log("complete");
+    runMain();
+  }
+  
 	// if (window.speechSynthesis) {
   //   populateVoiceList();
   //   $('#useVoiceSection').show();
   //   $('input#use_voice').click(updateVoiceSelect);
   //   $('select#voice_select').on('change', updateVoiceSelection);
   // }
+  function runMain (){
+    calculateAllConjugations();
+    calculateTransitions();
+    loadOptions();
+    restoreDefaults();
 
-  calculateAllConjugations();
-  calculateTransitions();
-  loadOptions();
-  restoreDefaults();
+    $('#go').click(startQuiz);
+    $('#defaults').click(restoreDefaults);
+    $('#backToStart').click(showSplash);
 
-  $('#go').on('click touchstart touchmove', startQuiz);
-  $('#defaults').click(restoreDefaults);
-  $('#backToStart').click(showSplash);
+    $('div.options input').click(updateOptionSummary);
+    $('select#questionFocus').on('change', updateOptionSummary);
+    $('input#trick').click(updateOptionSummary);
+    $('input#focus_mode').click(updateOptionSummary);
 
-  $('div.options input').click(updateOptionSummary);
-  $('select#questionFocus').on('change', updateOptionSummary);
-  $('input#trick').click(updateOptionSummary);
-  $('input#focus_mode').click(updateOptionSummary);
+    $('select').change(saveOptions);
+    $('input').change(saveOptions);
 
-  $('select').change(saveOptions);
-  $('input').change(saveOptions);
+    updateOptionSummary();
 
-  updateOptionSummary();
-
-  showSplash();
+    showSplash();
+  }
 });
 
 window.processAnswer = processAnswer;

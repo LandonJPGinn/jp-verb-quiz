@@ -1218,5 +1218,4 @@ var rules = {
   },
 };
 
-
 export default rules;
