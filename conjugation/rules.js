@@ -1,7 +1,23 @@
 // Calculate conjugated forms using a rule set
 // 2024 updated by Landon Ginn
 
-import words from './words.js';
+// import words from './words.js';
+
+let words;
+
+fetch('./words.json')
+  .then(response => response.json())
+  .then(data => {
+    // Check if the imported JSON object has the expected type property
+    if (data && typeof data === 'object') {
+        // Proceed with your code
+        words = data;
+    } else {
+        console.error('The imported JSON file does not have the expected type property.');
+    }
+  })
+  .catch(error => console.error('Error fetching JSON:', error));
+
 
 var rules = {
 

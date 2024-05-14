@@ -1,8 +1,86 @@
 // drill.js
-import words from './words.js';
+// import words from './words.js';
 import calculateAllConjugations from './rules.js';
-import count_dict from './count.json' assert { type: 'json' };
-import grp_sample from './grp_sample.json' assert { type: 'json' };
+// import count_dict from './count.json' assert { type: 'json' };
+// import grp_sample from './grp_sample.json' assert { type: 'json' };
+
+async function fetchJSON(url) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+    return await response.json();
+  } catch (error) {
+    console.error('Error fetching JSON:', error);
+  }
+}
+
+
+let words;
+let count_dict;
+let grp_sample;
+
+async function loadJSONData() {
+
+  try {
+    const words_data = await fetchJSON('./words.json');
+    words = words_data;
+    const count_dict_data = await fetchJSON('./count.json');
+    count_dict = count_dict_data;
+    const grp_sample_data = await fetchJSON('./grp_sample.json');
+    grp_sample = grp_sample_data;
+    // Continue with the rest of your code that depends on the loaded JSON data
+    // console.log(words);
+  } catch (error) {
+    console.error('Error loading JSON data:', error);
+  }
+}
+
+loadJSONData();
+
+function loadJSONSync(url) {
+  const xhr = new XMLHttpRequest();
+  xhr.open('GET', url, false);  // Third parameter specifies synchronous request
+  xhr.send();
+
+  if (xhr.status === 200) {
+    try {
+      jsonData = JSON.parse(xhr.responseText);
+      console.log('Data loaded synchronously:', jsonData); // Check the loaded data
+    } catch (error) {
+      console.error('Error parsing JSON:', error);
+    }
+  } else {
+    console.error('Failed to load JSON:', xhr.status);
+  }
+}
+
+
+
+
+// fetchJSON('./words.json')
+//   .then(data => {
+//     words = data;
+//     // Continue with the rest of your code that depends on the loaded JSON data
+//     console.log(words);
+//   });
+
+console.log(words);
+
+// fetchJSON('./count.json')
+//   .then(data => {
+//     count_dict = data;
+//     // Continue with the rest of your code that depends on the loaded JSON data
+//     console.log(words);
+//   });
+
+//   fetchJSON('./grp_sample.json')
+//   .then(data => {
+//     grp_sample = data;
+//     // Continue with the rest of your code that depends on the loaded JSON data
+//     console.log(words);
+//   });
 
 
 var transformations = [];
@@ -161,6 +239,7 @@ function getVerbForms(entry) {
     "hiragana": {},
     "furigana": {}
   };
+  console.log(words)
   Object.keys(words[entry].conjugations).forEach(function (key) {
     result["kanji"][key] = kanjiForm(words[entry].conjugations[key].forms);
     result["hiragana"][key] = kanaForm(words[entry].conjugations[key].forms);
