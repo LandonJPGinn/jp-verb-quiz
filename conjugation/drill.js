@@ -1,86 +1,14 @@
 // drill.js
 // import words from './words.js';
-import calculateAllConjugations from './rules.js';
+import rules from './rules.js';
 // import count_dict from './count.json' assert { type: 'json' };
 // import grp_sample from './grp_sample.json' assert { type: 'json' };
 
-async function fetchJSON(url) {
-  try {
-    const response = await fetch(url);
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-    return await response.json();
-  } catch (error) {
-    console.error('Error fetching JSON:', error);
-  }
-}
 
+var words;
+var count_dict;
+var grp_sample;
 
-let words;
-let count_dict;
-let grp_sample;
-
-async function loadJSONData() {
-
-  try {
-    const words_data = await fetchJSON('./words.json');
-    words = words_data;
-    const count_dict_data = await fetchJSON('./count.json');
-    count_dict = count_dict_data;
-    const grp_sample_data = await fetchJSON('./grp_sample.json');
-    grp_sample = grp_sample_data;
-    // Continue with the rest of your code that depends on the loaded JSON data
-    // console.log(words);
-  } catch (error) {
-    console.error('Error loading JSON data:', error);
-  }
-}
-
-loadJSONData();
-
-function loadJSONSync(url) {
-  const xhr = new XMLHttpRequest();
-  xhr.open('GET', url, false);  // Third parameter specifies synchronous request
-  xhr.send();
-
-  if (xhr.status === 200) {
-    try {
-      jsonData = JSON.parse(xhr.responseText);
-      console.log('Data loaded synchronously:', jsonData); // Check the loaded data
-    } catch (error) {
-      console.error('Error parsing JSON:', error);
-    }
-  } else {
-    console.error('Failed to load JSON:', xhr.status);
-  }
-}
-
-
-
-
-// fetchJSON('./words.json')
-//   .then(data => {
-//     words = data;
-//     // Continue with the rest of your code that depends on the loaded JSON data
-//     console.log(words);
-//   });
-
-console.log(words);
-
-// fetchJSON('./count.json')
-//   .then(data => {
-//     count_dict = data;
-//     // Continue with the rest of your code that depends on the loaded JSON data
-//     console.log(words);
-//   });
-
-//   fetchJSON('./grp_sample.json')
-//   .then(data => {
-//     grp_sample = data;
-//     // Continue with the rest of your code that depends on the loaded JSON data
-//     console.log(words);
-//   });
 
 
 var transformations = [];
@@ -239,7 +167,6 @@ function getVerbForms(entry) {
     "hiragana": {},
     "furigana": {}
   };
-  console.log(words)
   Object.keys(words[entry].conjugations).forEach(function (key) {
     result["kanji"][key] = kanjiForm(words[entry].conjugations[key].forms);
     result["hiragana"][key] = kanaForm(words[entry].conjugations[key].forms);
@@ -1000,7 +927,6 @@ function calculateTransitions() {
   var allTags = {};
 
   Object.keys(words).forEach(function (word) {
-
     Object.keys(words[word].conjugations).forEach(function (conjugation) {
 
       if (conjugation == "dictionary") {
@@ -1263,35 +1189,142 @@ function loadOptions() {
   }
 }
 
+function calculateConjugations(word, conjugation) {
+
+  if (words[word] == undefined)
+    return undefined;
+
+  var group = words[word].group;
+  var dictionary = words[word].dictionary;
+
+  if (conjugation == 'dictionary')
+    return dictionary;
+
+  if (rules[group] == undefined)
+    return undefined;
+
+  if (rules[group][conjugation] == undefined)
+    return undefined;
+
+  var conjugations = rules[group][conjugation].forms;
+
+  var result = {
+    forms: []
+  };
+
+  if (rules[group][conjugation].tetakei) {
+    result.tetakei = true;
+  }
+
+  conjugations.forEach(function (rule) {
+
+    if (rule.before && rule.after) {
+      if (dictionary.endsWith(rule.before)) {
+        result.forms.push(dictionary.substring(0, dictionary.length - rule.before.length) + rule.after);
+      }
+    }
+
+    if (rule.result) {
+      result.forms.push(rule.result);
+    }
+  });
+  return result;
+}
+
+function calculateAllConjugations() {
+
+  Object.keys(words).forEach(function (word) {
+    
+    words[word].conjugations = {
+      "dictionary": { forms: [words[word].dictionary] },
+    };
+  
+
+    var group = words[word].group;
+    Object.keys(rules[group]).forEach(function (conjugation) {
+      words[word].conjugations[conjugation] = calculateConjugations(word, conjugation);
+
+    })
+  });
+}
+
+
 $('window').ready(function () {
 
+  showLoadingIndicator();
+
+  var promises = [];
+
+
+  var promise1 = $.getJSON("./words.json")
+    .done(function(data) {
+      words = data;
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+      console.error('error loading words', textStatus, errorThrown);
+    });
+  
+  promises.push(promise1);
+
+  var promise2 = $.getJSON("./count.json")
+    .done(function(data) {
+      count_dict = data;
+    })
+    .fail(function(jqXHR, textStatus, errorThrown) {
+      console.error('error loading words', textStatus, errorThrown);
+    });
+
+  promises.push(promise2);
+
+  var promise3 = $.getJSON("./grp_sample.json")
+      .done(function(data) {
+        grp_sample = data;
+      })
+      .fail(function(jqXHR, textStatus, errorThrown) {
+        console.error('error loading words', textStatus, errorThrown);
+      });
+    
+    promises.push(promise3);
+
+  $.when.apply($, promises).done(function() {
+    hideLoadingIndicator();
+  });
+  function showLoadingIndicator() {
+    console.log("loading....");
+  }
+  function hideLoadingIndicator() {
+    console.log("complete");
+    runMain();
+  }
+  
 	// if (window.speechSynthesis) {
   //   populateVoiceList();
   //   $('#useVoiceSection').show();
   //   $('input#use_voice').click(updateVoiceSelect);
   //   $('select#voice_select').on('change', updateVoiceSelection);
   // }
+  function runMain (){
+    calculateAllConjugations();
+    calculateTransitions();
+    loadOptions();
+    restoreDefaults();
 
-  calculateAllConjugations();
-  calculateTransitions();
-  loadOptions();
-  restoreDefaults();
+    $('#go').on('click touchstart touchmove', startQuiz);
+    $('#defaults').click(restoreDefaults);
+    $('#backToStart').click(showSplash);
 
-  $('#go').on('click touchstart touchmove', startQuiz);
-  $('#defaults').click(restoreDefaults);
-  $('#backToStart').click(showSplash);
+    $('div.options input').click(updateOptionSummary);
+    $('select#questionFocus').on('change', updateOptionSummary);
+    $('input#trick').click(updateOptionSummary);
+    $('input#focus_mode').click(updateOptionSummary);
 
-  $('div.options input').click(updateOptionSummary);
-  $('select#questionFocus').on('change', updateOptionSummary);
-  $('input#trick').click(updateOptionSummary);
-  $('input#focus_mode').click(updateOptionSummary);
+    $('select').change(saveOptions);
+    $('input').change(saveOptions);
 
-  $('select').change(saveOptions);
-  $('input').change(saveOptions);
+    updateOptionSummary();
 
-  updateOptionSummary();
-
-  showSplash();
+    showSplash();
+  }
 });
 
 window.processAnswer = processAnswer;
