@@ -1290,10 +1290,10 @@ $('window').ready(function () {
     hideLoadingIndicator();
   });
   function showLoadingIndicator() {
-    console.log("loading....");
+    // console.log("loading....");
   }
   function hideLoadingIndicator() {
-    console.log("complete");
+    // console.log("complete");
     runMain();
   }
   
@@ -1309,7 +1309,7 @@ $('window').ready(function () {
     loadOptions();
     restoreDefaults();
 
-    $('#go').on('click touchstart touchmove', startQuiz);
+    $('#go').click(startQuiz);
     $('#defaults').click(restoreDefaults);
     $('#backToStart').click(showSplash);
 
