@@ -2,8 +2,7 @@
 
 
 Next Up:
-- [ ] solve iphone mode not working in safari (version of javascript???)
-- [ ] Add feedback google form
+
 - [ ] Add tip button namely for this VVVV step 
 
 # very time consuming step, may require a spreadsheet
@@ -25,7 +24,8 @@ Complete:
 - [x] Get the counter to math properly
 - [x] fix bug that randomly chooses a word and validates it to find one that applies.
     this is causes issues when there are hundreds of words but our options only allows one
-
+- [X] solve iphone mode not working in safari (version of javascript???)
+- [X] Add feedback google form
 
 Ideas:
 - Add da (desu)

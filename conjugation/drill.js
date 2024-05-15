@@ -14,7 +14,8 @@ const configOptions = {
   options: ["plain", "polite", "negative", "past", "te-form", "progressive",
     "potential", "conditional", "provisional", "imperative", "passive", "causative", "godan", "ichidan",
     "iku", "kuru", "suru", "aru", "iru", "i-adjective", "na-adjective", "ii", "desire",
-    "volitional", "trick", "kana", "furigana_always", "use_voice","common","n5","n4","n3","n2","n1"],
+    "volitional", "trick", "kana", "furigana_always", "go_to_next_question",
+    "auto_show_explanation", "use_voice","common","n5","n4","n3","n2","n1"],
 
   selects: ["questionFocus"],
 
@@ -49,6 +50,8 @@ const defaultConfig = {
   "trick": true,
   "kana": false,
   "furigana_always": true,
+  "go_to_next_question": false,
+  "auto_show_explanation": false,
   "use_voice": false,
   "common": true,
   "n5": true,
@@ -593,6 +596,7 @@ function generateQuestion() {
 
 function processAnswer() {
 
+  var options = getOptions();
   var questionData = window.questionData;
   var response = $('#answer').val().trim();
   // console.log("answer provided", response);
@@ -645,6 +649,19 @@ function processAnswer() {
   $('#proceed button').focus();
 
   updateHistoryView(log);
+  //reccomended by toxinu
+  if (correct) {
+    if (options.go_to_next_question) {
+      //add confirmation animation
+      proceed();
+    }
+  } else {
+    if (options.auto_show_explanation) {
+      //emulate explain button press
+      explain();
+    }
+  }
+  window.scrollTo(0,0);
 }
 
 function shakeInputArea() {
