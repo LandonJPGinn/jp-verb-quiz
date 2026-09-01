@@ -133,7 +133,9 @@ void main() {
     test('weak spots ignore too-few attempts and mastered forms', () {
       final store = StatsStore();
       store.recordForm(form: 'volitional', correct: false); // 1 attempt
-      for (var i = 0; i < 4; i++) store.recordForm(form: 'past', correct: true);
+      for (var i = 0; i < 4; i++) {
+        store.recordForm(form: 'past', correct: true);
+      }
       store.recordForm(form: 'past', correct: false); // 80%, 5 attempts
       // past is exactly at the 80% bar -> not weak; volitional too few attempts
       expect(store.weakSpots(), isEmpty);
@@ -155,12 +157,32 @@ void main() {
   group('Layered storage merge', () {
     test('stats merge is additive per key (max counters, OR goalMet)', () {
       final local = {
-        '2026-08-31': {'date': '2026-08-31', 'answered': 10, 'correct': 8, 'goalMet': false},
-        '2026-08-30': {'date': '2026-08-30', 'answered': 5, 'correct': 5, 'goalMet': true},
+        '2026-08-31': {
+          'date': '2026-08-31',
+          'answered': 10,
+          'correct': 8,
+          'goalMet': false,
+        },
+        '2026-08-30': {
+          'date': '2026-08-30',
+          'answered': 5,
+          'correct': 5,
+          'goalMet': true,
+        },
       };
       final remote = {
-        '2026-08-31': {'date': '2026-08-31', 'answered': 4, 'correct': 4, 'goalMet': true},
-        '2026-08-29': {'date': '2026-08-29', 'answered': 2, 'correct': 0, 'goalMet': false},
+        '2026-08-31': {
+          'date': '2026-08-31',
+          'answered': 4,
+          'correct': 4,
+          'goalMet': true,
+        },
+        '2026-08-29': {
+          'date': '2026-08-29',
+          'answered': 2,
+          'correct': 0,
+          'goalMet': false,
+        },
       };
       final merged = mergeStatsData({'days': local}, {'days': remote});
       final days = merged['days'] as Map;
@@ -173,30 +195,40 @@ void main() {
     });
 
     test('settings merge is whole-section LWW', () {
-      final local = {'settings': makeEnvelope({'a': 1}, 100)};
-      final remote = {'settings': makeEnvelope({'a': 2}, 200)};
+      final local = {
+        'settings': makeEnvelope({'a': 1}, 100),
+      };
+      final remote = {
+        'settings': makeEnvelope({'a': 2}, 200),
+      };
       final changed = mergeSections(local: local, remote: remote);
       expect(changed['settings']!['data']['a'], 2);
 
       // Older remote never overwrites.
-      final older = {'settings': makeEnvelope({'a': 3}, 50)};
+      final older = {
+        'settings': makeEnvelope({'a': 3}, 50),
+      };
       final unchanged = mergeSections(local: local, remote: older);
       expect(unchanged.containsKey('settings'), false);
     });
 
     test('presets merge is per-name LWW', () {
-      final local = {'presets': makeEnvelope({
-        'list': [
-          {'name': 'A', 'updatedAt': 10},
-          {'name': 'B', 'updatedAt': 5},
-        ]
-      }, 100)};
-      final remote = {'presets': makeEnvelope({
-        'list': [
-          {'name': 'A', 'updatedAt': 20}, // newer on remote
-          {'name': 'C', 'updatedAt': 7},  // remote-only
-        ]
-      }, 200)};
+      final local = {
+        'presets': makeEnvelope({
+          'list': [
+            {'name': 'A', 'updatedAt': 10},
+            {'name': 'B', 'updatedAt': 5},
+          ],
+        }, 100),
+      };
+      final remote = {
+        'presets': makeEnvelope({
+          'list': [
+            {'name': 'A', 'updatedAt': 20}, // newer on remote
+            {'name': 'C', 'updatedAt': 7}, // remote-only
+          ],
+        }, 200),
+      };
       final changed = mergeSections(local: local, remote: remote);
       final list = changed['presets']!['data']['list'] as List;
       final names = {for (final p in list) p['name']: p['updatedAt']};

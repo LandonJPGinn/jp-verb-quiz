@@ -13,17 +13,21 @@ class TagChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Container(
-        margin: const EdgeInsets.only(right: 4, bottom: 4),
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-        decoration: BoxDecoration(
-          color: AppColors.chip,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(
-          label,
-          style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.w600),
-        ),
-      );
+    margin: const EdgeInsets.only(right: 4, bottom: 4),
+    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+    decoration: BoxDecoration(
+      color: AppColors.chip,
+      borderRadius: BorderRadius.circular(6),
+    ),
+    child: Text(
+      label,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+      ),
+    ),
+  );
 }
 
 /// Renders a word in kanji[kana] notation according to display mode
@@ -142,8 +146,11 @@ class StreakBadge extends StatelessWidget {
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        Icon(Icons.local_fire_department,
-            color: streak > 0 ? AppColors.flame : Colors.grey, size: flameSize),
+        Icon(
+          Icons.local_fire_department,
+          color: streak > 0 ? AppColors.flame : Colors.grey,
+          size: flameSize,
+        ),
         const SizedBox(width: 3),
         Text(
           '$streak',
@@ -233,7 +240,8 @@ class _MonthCalendarState extends State<MonthCalendar> {
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
     final outline = dark ? AppColors.outlineDark : AppColors.outline;
-    final dimText = Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75);
+    final dimText = Theme.of(context).colorScheme.onSurface
+        .withValues(alpha: 0.75);
 
     final first = DateTime(_month.year, _month.month, 1);
     final daysInMonth = DateTime(_month.year, _month.month + 1, 0).day;
@@ -249,14 +257,25 @@ class _MonthCalendarState extends State<MonthCalendar> {
             Expanded(
               child: Text(
                 _monthLabel(_month),
-                style: const TextStyle(fontWeight: FontWeight.w800, fontSize: 15),
+                style: const TextStyle(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 15,
+                ),
               ),
             ),
-            _navButton(Icons.chevron_left, () => setState(
-                  () => _month = DateTime(_month.year, _month.month - 1, 1))),
+            _navButton(
+              Icons.chevron_left,
+              () => setState(
+                () => _month = DateTime(_month.year, _month.month - 1, 1),
+              ),
+            ),
             const SizedBox(width: 4),
-            _navButton(Icons.chevron_right, () => setState(
-                  () => _month = DateTime(_month.year, _month.month + 1, 1))),
+            _navButton(
+              Icons.chevron_right,
+              () => setState(
+                () => _month = DateTime(_month.year, _month.month + 1, 1),
+              ),
+            ),
           ],
         ),
         const SizedBox(height: 12),
@@ -286,50 +305,23 @@ class _MonthCalendarState extends State<MonthCalendar> {
               _dayCell(day, today, dark, dimText, outline),
           ],
         ),
-        const SizedBox(height: 10),
-        Row(
-          children: [
-            Text('answered', style: TextStyle(fontSize: 11, color: dimText)),
-            const SizedBox(width: 6),
-            _swatch((dark ? AppColors.outlineDark : AppColors.outline).withValues(alpha: 0.45), dark),
-            const SizedBox(width: 4),
-            _swatch(AppColors.indigo.withValues(alpha: 0.55), dark),
-            const SizedBox(width: 4),
-            _swatch(AppColors.indigo, dark),
-            const SizedBox(width: 6),
-            Text('more  ·  tap a day for details',
-                style: TextStyle(fontSize: 11, color: dimText)),
-          ],
-        ),
       ],
     );
   }
 
-  Widget _navButton(IconData icon, VoidCallback onTap) => IconButton(
-        visualDensity: VisualDensity.compact,
-        onPressed: onTap,
-        icon: Icon(icon, size: 22),
-      );
-
-  Widget _swatch(Color color, bool dark) => Container(
-        width: 14,
-        height: 14,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(4),
-          border: Border.all(
-            color: dark ? AppColors.outlineDark : AppColors.outline,
-            width: 1,
-          ),
-        ),
-      );
-
-  Widget _dayCell(int day, DateTime today, bool dark, Color dimText, Color outline) {
+  Widget _dayCell(
+    int day,
+    DateTime today,
+    bool dark,
+    Color dimText,
+    Color outline,
+  ) {
     final date = DateTime(_month.year, _month.month, day);
     final key = _key(date);
     final answered = widget.stats.answeredOn(key);
     final isFuture = date.isAfter(DateTime(today.year, today.month, today.day));
-    final isToday = date.year == today.year &&
+    final isToday =
+        date.year == today.year &&
         date.month == today.month &&
         date.day == today.day;
     final goal = widget.goal;
@@ -338,8 +330,7 @@ class _MonthCalendarState extends State<MonthCalendar> {
     Color bg;
     double intensity = 0;
     if (answered > 0) {
-      intensity =
-          goal > 0 ? (answered / goal).clamp(0.0, 1.0) : 1.0;
+      intensity = goal > 0 ? (answered / goal).clamp(0.0, 1.0) : 1.0;
     }
     if (answered == 0) {
       bg = outline.withValues(alpha: isFuture ? 0.22 : 0.35);
@@ -348,17 +339,14 @@ class _MonthCalendarState extends State<MonthCalendar> {
     }
 
     return InkWell(
-      onTap: isFuture
-          ? null
-          : () => _showDayDialog(context, date, answered),
+      onTap: isFuture ? null : () => _showDayDialog(context, date, answered),
       borderRadius: BorderRadius.circular(8),
       child: Container(
         decoration: BoxDecoration(
           color: bg,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color:
-                isToday ? AppColors.indigo : outline.withValues(alpha: 0.6),
+            color: isToday ? AppColors.indigo : outline.withValues(alpha: 0.6),
             width: isToday ? 2 : 1,
           ),
         ),
@@ -371,8 +359,8 @@ class _MonthCalendarState extends State<MonthCalendar> {
             color: answered == 0
                 ? dimText
                 : dark
-                    ? AppColors.indigoDark
-                    : Colors.white,
+                ? AppColors.indigoDark
+                : Colors.white,
           ),
         ),
       ),
@@ -382,9 +370,20 @@ class _MonthCalendarState extends State<MonthCalendar> {
   void _showDayDialog(BuildContext context, DateTime date, int answered) {
     final correct = widget.stats.correctOn(_key(date));
     final goal = widget.goal;
-    final names = [
-      '', 'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+    const names = [
+      '',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     showDialog(
       context: context,
@@ -398,23 +397,19 @@ class _MonthCalendarState extends State<MonthCalendar> {
               answered == 0
                   ? 'No questions answered this day.'
                   : 'Correct answers: $correct\n'
-                      'Daily goal: $goal\n'
-                      'Goal covered: ${goal > 0 ? ((answered / goal) * 100).clamp(0, 100).round() : 100}%',
+                        'Daily goal: $goal\n'
+                        'Goal covered: ${goal > 0 ? ((answered / goal) * 100).clamp(0, 100).round() : 100}%',
               style: const TextStyle(fontSize: 14.5, height: 1.5),
             ),
             const SizedBox(height: 12),
             ClipRRect(
               borderRadius: BorderRadius.circular(6),
               child: LinearProgressIndicator(
-                value:
-                    goal <= 0 ? 1 : (answered / goal).clamp(0.0, 1.0),
+                value: goal <= 0 ? 1 : (answered / goal).clamp(0.0, 1.0),
                 minHeight: 10,
-                backgroundColor: Theme.of(context)
-                    .colorScheme
-                    .onSurface
+                backgroundColor: Theme.of(context).colorScheme.onSurface
                     .withValues(alpha: 0.12),
-                valueColor:
-                    const AlwaysStoppedAnimation(AppColors.indigo),
+                valueColor: const AlwaysStoppedAnimation(AppColors.indigo),
               ),
             ),
           ],
@@ -432,10 +427,27 @@ class _MonthCalendarState extends State<MonthCalendar> {
     );
   }
 
+  Widget _navButton(IconData icon, VoidCallback onTap) => IconButton(
+    visualDensity: VisualDensity.compact,
+    onPressed: onTap,
+    icon: Icon(icon, size: 22),
+  );
+
   String _monthLabel(DateTime m) {
     const names = [
-      '', 'January', 'February', 'March', 'April', 'May', 'June',
-      'July', 'August', 'September', 'October', 'November', 'December'
+      '',
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
     ];
     return '${names[m.month]} ${m.year}';
   }

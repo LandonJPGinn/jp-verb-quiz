@@ -61,7 +61,9 @@ class SelectChip extends StatelessWidget {
                 style: TextStyle(
                   fontSize: 13.5,
                   fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                  color: selected ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                  color: selected
+                      ? Colors.white
+                      : Theme.of(context).colorScheme.onSurface,
                 ),
               ),
             ),
@@ -151,11 +153,15 @@ Future<String?> showFocusPicker(BuildContext context, String current) async {
                     ListTile(
                       dense: true,
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       title: Text(e.value),
                       trailing: e.key == current
-                          ? const Icon(Icons.check,
-                              color: AppColors.indigo, size: 20)
+                          ? const Icon(
+                              Icons.check,
+                              color: AppColors.indigo,
+                              size: 20,
+                            )
                           : null,
                       onTap: () => Navigator.pop(sheetContext, e.key),
                     ),

@@ -14,8 +14,9 @@ import 'theme.dart';
 import 'widgets.dart';
 
 final RegExp japaneseTextPattern = RegExp(
-    r'^[\u{3040}-\u{309f}\u{30a0}-\u{30ff}\u{3190}-\u{319f}\u{31f0}-\u{31ff}\u{3400}-\u{4dbf}\u{4e00}-\u{9ffc}\u{f900}-\u{faff}\u{ff00}-\u{ffef}\u{1b000}-\u{1b0ff}\u{1b100}-\u{1b12f}\u{1b130}-\u{1b16f}\u{20000}-\u{2a6dd}\u{2a700}-\u{2b734}\u{2b740}-\u{2b81d}\u{2b820}-\u{2cea1}\u{2ceb0}-\u{2ebe0}\u{2f800}-\u{2fa1f}\u{30000}-\u{3134a}]*$',
-    unicode: true);
+  r'^[\u{3040}-\u{309f}\u{30a0}-\u{30ff}\u{3190}-\u{319f}\u{31f0}-\u{31ff}\u{3400}-\u{4dbf}\u{4e00}-\u{9ffc}\u{f900}-\u{faff}\u{ff00}-\u{ffef}\u{1b000}-\u{1b0ff}\u{1b100}-\u{1b12f}\u{1b130}-\u{1b16f}\u{20000}-\u{2a6dd}\u{2a700}-\u{2b734}\u{2b740}-\u{2b81d}\u{2b820}-\u{2cea1}\u{2ceb0}-\u{2ebe0}\u{2f800}-\u{2fa1f}\u{30000}-\u{3134a}]*$',
+  unicode: true,
+);
 
 /// The quiz: question card, romaji input, feedback and an inline explanation.
 ///
@@ -44,7 +45,7 @@ class _QuizScreenState extends State<QuizScreen>
   final _random = Random();
 
   QuizQuestion? _question;
-  final List<QuizQuestion> _requeue = [];
+  final List<QuizQuestion> _queue = [];
   int _mastered = 0;
   int _attempts = 0;
   bool _phaseFeedback = false;
@@ -60,6 +61,7 @@ class _QuizScreenState extends State<QuizScreen>
   @override
   void initState() {
     super.initState();
+    _buildSession();
     _nextQuestion();
   }
 
@@ -74,22 +76,24 @@ class _QuizScreenState extends State<QuizScreen>
   bool get _useButtonSubmit =>
       widget.store.settings.submitMode == SubmitMode.button;
 
-  void _nextQuestion() {
-    // Re-queued mistakes come back interleaved with fresh questions.
-    QuizQuestion? q;
-    if (_requeue.isNotEmpty && _random.nextBool()) {
-      q = _requeue.removeAt(0);
-    } else {
-      q = widget.engine.generateQuestion(
-        widget.engine.questionPoolFor(widget.options),
-        widget.options,
-        _random,
-      );
+  /// The session works on a FIXED set: [total] questions are picked up front
+  /// from the pool. Wrong answers go to the back of the queue and come back
+  /// until mastered — no new questions appear mid-session.
+  void _buildSession() {
+    final pool = widget.engine.questionPoolFor(widget.options);
+    for (var i = 0; i < widget.options.questionCount; i++) {
+      final q = widget.engine.generateQuestion(pool, widget.options, _random);
+      if (q == null) break;
+      _queue.add(q);
     }
-    if (q == null) {
+  }
+
+  void _nextQuestion() {
+    if (_queue.isEmpty) {
       _finish();
       return;
     }
+    final q = _queue.removeAt(0);
     setState(() {
       _question = q;
       _phaseFeedback = false;
@@ -124,7 +128,7 @@ class _QuizScreenState extends State<QuizScreen>
       if (correct) {
         _mastered++;
       } else {
-        _requeue.add(q); // comes back later in the session
+        _queue.add(q); // back of the queue — same set, tried again
       }
     });
 
@@ -168,7 +172,7 @@ class _QuizScreenState extends State<QuizScreen>
           _attempts == 0
               ? 'No attempts yet — nothing will be lost.'
               : '$_attempts ${_attempts == 1 ? "attempt" : "attempts"} already '
-                  'count toward today\'s activity.',
+                    'count toward today\'s activity.',
         ),
         actions: [
           SizedBox(
@@ -183,14 +187,10 @@ class _QuizScreenState extends State<QuizScreen>
                 const SizedBox(height: 10),
                 OutlinedButton(
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: Theme.of(context)
-                        .colorScheme
-                        .onSurface
+                    foregroundColor: Theme.of(context).colorScheme.onSurface
                         .withValues(alpha: 0.75),
                     side: BorderSide(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
+                      color: Theme.of(context).colorScheme.onSurface
                           .withValues(alpha: 0.25),
                     ),
                   ),
@@ -234,21 +234,21 @@ class _QuizScreenState extends State<QuizScreen>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
                   child: LinearProgressIndicator(
-                    value:
-                        total == 0 ? 0 : (_mastered / total).clamp(0.0, 1.0),
+                    value: total == 0 ? 0 : (_mastered / total).clamp(0.0, 1.0),
                     minHeight: 12,
                     backgroundColor:
                         Theme.of(context).brightness == Brightness.dark
-                            ? AppColors.indigoSoftDark
-                            : AppColors.indigoSoft,
-                    valueColor:
-                        const AlwaysStoppedAnimation(AppColors.indigo),
+                        ? AppColors.indigoSoftDark
+                        : AppColors.indigoSoft,
+                    valueColor: const AlwaysStoppedAnimation(AppColors.indigo),
                   ),
                 ),
               ),
               const SizedBox(width: 12),
               StreakBadge(
-                  streak: widget.store.stats.currentStreak, flameSize: 20),
+                streak: widget.store.stats.currentStreak,
+                flameSize: 20,
+              ),
             ],
           ),
         ),
@@ -261,7 +261,11 @@ class _QuizScreenState extends State<QuizScreen>
           },
           child: ListView(
             padding: EdgeInsets.fromLTRB(
-                20, 8, 20, MediaQuery.viewPaddingOf(context).bottom + 24),
+              20,
+              8,
+              20,
+              MediaQuery.viewPaddingOf(context).bottom + 24,
+            ),
             children: [
               _questionCard(context, q),
               const SizedBox(height: 20),
@@ -287,8 +291,7 @@ class _QuizScreenState extends State<QuizScreen>
           children: [
             Container(
               width: double.infinity,
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
               decoration: BoxDecoration(
                 color: dark ? AppColors.indigoSoftDark : AppColors.indigoSoft,
                 borderRadius: BorderRadius.circular(20),
@@ -301,8 +304,9 @@ class _QuizScreenState extends State<QuizScreen>
                   maxLines: 1,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    color:
-                        dark ? const Color(0xFFB9D0F2) : AppColors.indigoDark,
+                    color: dark
+                        ? const Color(0xFFB9D0F2)
+                        : AppColors.indigoDark,
                     fontWeight: FontWeight.w700,
                     fontSize: 14.5,
                   ),
@@ -337,12 +341,21 @@ class _QuizScreenState extends State<QuizScreen>
     );
   }
 
-  /// "N5 · Top 100" style badge so every question shows its source list.
+  /// "N1 · Top 100" style badge so every question shows its source list.
+  /// Level comes from the word's tags — the `level` field in the data is
+  /// often just a wrong default.
   String? _levelBadge(QuizQuestion q) {
     final word = widget.engine.words[q.entry];
     if (word == null) return null;
+    String? level;
+    for (final l in ['n1', 'n2', 'n3', 'n4', 'n5']) {
+      if (word.tags.contains(l)) {
+        level = l.toUpperCase();
+        break;
+      }
+    }
     final badges = <String>[
-      if (word.level.isNotEmpty) word.level,
+      ?level,
       if (word.tags.contains('common')) 'Top 100',
     ];
     return badges.isEmpty ? null : badges.join(' · ');
@@ -353,7 +366,7 @@ class _QuizScreenState extends State<QuizScreen>
   String _instructionText(QuizQuestion q) {
     final phrase =
         ConjugationEngine.questionPhrases[q.transformation.phrase] ??
-            q.transformation.phrase;
+        q.transformation.phrase;
     var text = phrase.replaceFirst(' the following', '');
     text = text.replaceAll(RegExp(r'\s+'), ' ').trim();
     if (text.isEmpty) return text;
@@ -369,11 +382,13 @@ class _QuizScreenState extends State<QuizScreen>
         focusNode: _focusNode,
         textAlign: TextAlign.center,
         style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w600),
-        textInputAction:
-            _useButtonSubmit ? TextInputAction.none : TextInputAction.done,
+        textInputAction: _useButtonSubmit
+            ? TextInputAction.none
+            : TextInputAction.done,
         onSubmitted: _useButtonSubmit ? null : (_) => _submitAnswer(),
-        onChanged:
-            widget.store.settings.romajiConversion ? _onInputChanged : null,
+        onChanged: widget.store.settings.romajiConversion
+            ? _onInputChanged
+            : null,
         decoration: const InputDecoration(
           hintText: '答え',
           contentPadding: EdgeInsets.symmetric(vertical: 16),
@@ -394,9 +409,7 @@ class _QuizScreenState extends State<QuizScreen>
             'Press Enter to check',
             style: TextStyle(
               fontSize: 12.5,
-              color: Theme.of(context)
-                  .colorScheme
-                  .onSurface
+              color: Theme.of(context).colorScheme.onSurface
                   .withValues(alpha: 0.75),
             ),
           ),
@@ -456,9 +469,7 @@ class _QuizScreenState extends State<QuizScreen>
                 'Your answer',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
+                  color: Theme.of(context).colorScheme.onSurface
                       .withValues(alpha: 0.75),
                   fontWeight: FontWeight.w700,
                 ),
@@ -469,9 +480,7 @@ class _QuizScreenState extends State<QuizScreen>
                   fontSize: 20,
                   decoration: TextDecoration.lineThrough,
                   decorationColor: AppColors.error,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
+                  color: Theme.of(context).colorScheme.onSurface
                       .withValues(alpha: 0.75),
                 ),
               ),
@@ -480,9 +489,7 @@ class _QuizScreenState extends State<QuizScreen>
                 'Correct answer',
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
+                  color: Theme.of(context).colorScheme.onSurface
                       .withValues(alpha: 0.75),
                   fontWeight: FontWeight.w700,
                 ),
@@ -511,9 +518,7 @@ class _QuizScreenState extends State<QuizScreen>
                 style: TextStyle(
                   fontSize: 12,
                   fontStyle: FontStyle.italic,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
+                  color: Theme.of(context).colorScheme.onSurface
                       .withValues(alpha: 0.75),
                 ),
               ),
@@ -525,9 +530,9 @@ class _QuizScreenState extends State<QuizScreen>
       if (!_lastCorrect)
         OutlinedButton.icon(
           onPressed: () => setState(() => _explainVisible = !_explainVisible),
-          icon: Icon(_explainVisible
-              ? Icons.unfold_less
-              : Icons.menu_book_outlined),
+          icon: Icon(
+            _explainVisible ? Icons.unfold_less : Icons.menu_book_outlined,
+          ),
           label: Text(_explainVisible ? 'Hide explanation' : 'Why?'),
         ),
       if (!_lastCorrect && _explainVisible) ...[
@@ -575,8 +580,9 @@ class ExplanationCard extends StatelessWidget {
 
     var dictionary = engine.conjugationFor(question.entry, 'dictionary').forms;
     if (word.group == 'na-adjective') {
-      dictionary =
-          dictionary.map((d) => d.replaceAll(RegExp(r'だ$'), '')).toList();
+      dictionary = dictionary
+          .map((d) => d.replaceAll(RegExp(r'だ$'), ''))
+          .toList();
     }
 
     return Card(
@@ -598,8 +604,10 @@ class ExplanationCard extends StatelessWidget {
             const SizedBox(height: 2),
             Text(
               word.meaning,
-              style:
-                  TextStyle(fontSize: 13.5, color: onSurface.withValues(alpha: 0.75)),
+              style: TextStyle(
+                fontSize: 13.5,
+                color: onSurface.withValues(alpha: 0.75),
+              ),
             ),
             if (word.sentences.isNotEmpty) ...[
               const SizedBox(height: 10),
@@ -607,8 +615,7 @@ class ExplanationCard extends StatelessWidget {
                 width: double.infinity,
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color:
-                      dark ? AppColors.indigoSoftDark : AppColors.indigoSoft,
+                  color: dark ? AppColors.indigoSoftDark : AppColors.indigoSoft,
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Column(
@@ -636,9 +643,11 @@ class ExplanationCard extends StatelessWidget {
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.open_in_new,
-                              size: 13,
-                              color: Theme.of(context).colorScheme.primary),
+                          Icon(
+                            Icons.open_in_new,
+                            size: 13,
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Check on Jisho.org',
@@ -680,8 +689,9 @@ class ExplanationCard extends StatelessWidget {
               if (!isTrick)
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
-                  child:
-                      Wrap(children: [for (final tag in t.toTags) TagChip(tag)]),
+                  child: Wrap(
+                    children: [for (final tag in t.toTags) TagChip(tag)],
+                  ),
                 ),
             ], titleColor: onSurface),
             _step('3', 'The correct answer', [
@@ -727,8 +737,12 @@ class ExplanationCard extends StatelessWidget {
     );
   }
 
-  Widget _step(String number, String title, List<Widget> children,
-      {required Color titleColor}) {
+  Widget _step(
+    String number,
+    String title,
+    List<Widget> children, {
+    required Color titleColor,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 14),
       child: Row(

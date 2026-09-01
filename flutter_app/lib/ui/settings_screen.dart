@@ -25,8 +25,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
   @override
   void initState() {
     super.initState();
-    _goalController =
-        TextEditingController(text: '${widget.store.settings.dailyGoal}');
+    _goalController = TextEditingController(
+      text: '${widget.store.settings.dailyGoal}',
+    );
   }
 
   @override
@@ -49,8 +50,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListenableBuilder(
         listenable: widget.store,
         builder: (context, _) => ListView(
-          padding: EdgeInsets.fromLTRB(20, 4, 20,
-              MediaQuery.viewPaddingOf(context).bottom + 32),
+          padding: EdgeInsets.fromLTRB(
+            20,
+            4,
+            20,
+            MediaQuery.viewPaddingOf(context).bottom + 32,
+          ),
           children: [
             const SectionHeader('Answering'),
             _tile(
@@ -63,18 +68,22 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: SegmentedButton<SubmitMode>(
                 segments: const [
                   ButtonSegment(value: SubmitMode.enter, label: Text('Enter')),
-                  ButtonSegment(value: SubmitMode.button, label: Text('Button')),
+                  ButtonSegment(
+                    value: SubmitMode.button,
+                    label: Text('Button'),
+                  ),
                 ],
                 selected: {s.submitMode},
-                onSelectionChanged: (mode) => _set(
-                      () => s.submitMode = mode.first,
-                    ),
+                onSelectionChanged: (mode) =>
+                    _set(() => s.submitMode = mode.first),
               ),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Auto-advance on correct'),
-              subtitle: const Text('Skip the "Next" tap after a correct answer'),
+              subtitle: const Text(
+                'Skip the "Next" tap after a correct answer',
+              ),
               value: s.autoNextOnCorrect,
               onChanged: (v) => _set(() => s.autoNextOnCorrect = v),
             ),
@@ -87,16 +96,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
-              title: Text('Romaji → hiragana ${s.romajiConversion ? "on" : "off"}'),
+              title: Text(
+                'Romaji → hiragana ${s.romajiConversion ? "on" : "off"}',
+              ),
               subtitle: const Text(
-                  'Convert romaji letters to kana as you type (Caps Lock works too)'),
+                'Convert romaji letters to kana as you type (Caps Lock works too)',
+              ),
               value: s.romajiConversion,
               onChanged: (v) => _set(() => s.romajiConversion = v),
             ),
             SwitchListTile(
               contentPadding: EdgeInsets.zero,
               title: const Text('Show furigana'),
-              subtitle: const Text('Reading above kanji in questions and answers'),
+              subtitle: const Text(
+                'Reading above kanji in questions and answers',
+              ),
               value: s.furiganaAlways,
               onChanged: (v) => _set(() => s.furiganaAlways = v),
             ),
@@ -104,8 +118,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             _tile(
               icon: Icons.flag,
               title: 'Questions per day',
-              subtitle:
-                  'Reaching the goal keeps your streak alive — any number works',
+              subtitle: 'Reaching the goal keeps your streak alive — any number works',
               context: context,
               trailing: Row(
                 children: [
@@ -158,17 +171,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
               trailing: SegmentedButton<ThemeSetting>(
                 segments: const [
                   ButtonSegment(
-                      value: ThemeSetting.system,
-                      label: Text('Auto'),
-                      icon: Icon(Icons.brightness_auto, size: 16)),
+                    value: ThemeSetting.system,
+                    label: Text('Auto'),
+                    icon: Icon(Icons.brightness_auto, size: 16),
+                  ),
                   ButtonSegment(
-                      value: ThemeSetting.light,
-                      label: Text('Light'),
-                      icon: Icon(Icons.light_mode, size: 16)),
+                    value: ThemeSetting.light,
+                    label: Text('Light'),
+                    icon: Icon(Icons.light_mode, size: 16),
+                  ),
                   ButtonSegment(
-                      value: ThemeSetting.dark,
-                      label: Text('Dark'),
-                      icon: Icon(Icons.dark_mode, size: 16)),
+                    value: ThemeSetting.dark,
+                    label: Text('Dark'),
+                    icon: Icon(Icons.dark_mode, size: 16),
+                  ),
                 ],
                 selected: {s.theme},
                 onSelectionChanged: (v) => _set(() => s.theme = v.first),
@@ -180,7 +196,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: const Icon(Icons.backup_outlined),
               title: const Text('Backup file'),
               subtitle: const Text(
-                  'Export or import your full practice history as a file'),
+                'Export or import your full practice history as a file',
+              ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -193,7 +210,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               leading: const Icon(Icons.cloud_sync_outlined),
               title: const Text('Cloud sync'),
               subtitle: const Text(
-                  'Automatic sync across devices via your own Firebase project'),
+                'Automatic sync across devices via your own Firebase project',
+              ),
               trailing: const Icon(Icons.chevron_right),
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
@@ -209,7 +227,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 13,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+                color: Theme.of(context).colorScheme.onSurface
+                    .withValues(alpha: 0.75),
               ),
             ),
             const SizedBox(height: 12),
@@ -218,7 +237,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+                color: Theme.of(context).colorScheme.onSurface
+                    .withValues(alpha: 0.75),
               ),
             ),
             const SizedBox(height: 8),
@@ -227,15 +247,25 @@ class _SettingsScreenState extends State<SettingsScreen> {
               children: [
                 TextButton.icon(
                   onPressed: () => JishoLink.open(
-                      context, 'https://github.com/wkdonc/conjugation'),
+                    context,
+                    'https://github.com/wkdonc/conjugation',
+                  ),
                   icon: const Icon(Icons.link, size: 16),
-                  label: const Text("Don's original", style: TextStyle(fontSize: 12)),
+                  label: const Text(
+                    "Don's original",
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
                 TextButton.icon(
                   onPressed: () => JishoLink.open(
-                      context, 'https://github.com/LandonJPGinn/jp-verb-quiz'),
+                    context,
+                    'https://github.com/LandonJPGinn/jp-verb-quiz',
+                  ),
                   icon: const Icon(Icons.link, size: 16),
-                  label: const Text("Landon's fork", style: TextStyle(fontSize: 12)),
+                  label: const Text(
+                    "Landon's fork",
+                    style: TextStyle(fontSize: 12),
+                  ),
                 ),
               ],
             ),
@@ -266,14 +296,19 @@ Widget _tile({
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(title,
-                      style: const TextStyle(
-                          fontWeight: FontWeight.w800, fontSize: 15)),
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w800,
+                      fontSize: 15,
+                    ),
+                  ),
                   Text(
                     subtitle,
                     style: TextStyle(
                       fontSize: 12.5,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+                      color: Theme.of(context).colorScheme.onSurface
+                          .withValues(alpha: 0.75),
                     ),
                   ),
                 ],

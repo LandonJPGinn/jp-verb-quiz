@@ -18,7 +18,8 @@ class ConjugationEngine {
   static Future<ConjugationEngine> load({
     required String wordsJson,
     required String rulesJson,
-  }) async {    final engine = ConjugationEngine._();
+  }) async {
+    final engine = ConjugationEngine._();
     final wordsMap = jsonDecode(wordsJson) as Map<String, dynamic>;
     engine.words = wordsMap.map(
       (k, v) => MapEntry(k, WordEntry.fromJson(v as Map<String, dynamic>)),
@@ -27,7 +28,8 @@ class ConjugationEngine {
     final rulesMap = jsonDecode(rulesJson) as Map<String, dynamic>;
     engine.rules = rulesMap.map((group, forms) {
       final inner = (forms as Map<String, dynamic>).map(
-        (name, rf) => MapEntry(name, RuleForm.fromJson(rf as Map<String, dynamic>)),
+        (name, rf) =>
+            MapEntry(name, RuleForm.fromJson(rf as Map<String, dynamic>)),
       );
       return MapEntry(group, inner);
     });
@@ -39,9 +41,9 @@ class ConjugationEngine {
 
   /// Loads the bundled words.json / rules.json assets.
   static Future<ConjugationEngine> loadAssets() async => load(
-        wordsJson: await rootBundle.loadString('assets/words.json'),
-        rulesJson: await rootBundle.loadString('assets/rules.json'),
-      );
+    wordsJson: await rootBundle.loadString('assets/words.json'),
+    rulesJson: await rootBundle.loadString('assets/rules.json'),
+  );
 
   // ---------------------------------------------------------------- forms
 
@@ -86,8 +88,10 @@ class ConjugationEngine {
     for (final rule in form.forms) {
       if (rule.before != null && rule.after != null) {
         if (dictionary.endsWith(rule.before!)) {
-          results.add(dictionary.substring(0, dictionary.length - rule.before!.length) +
-              rule.after!);
+          results.add(
+            dictionary.substring(0, dictionary.length - rule.before!.length) +
+                rule.after!,
+          );
         }
       }
       if (rule.result != null) {
@@ -288,7 +292,13 @@ class ConjugationEngine {
 
     if (options.getBool(words[entry]!.group) == false) valid = false;
 
-    final hasFilter = options.n5 || options.n4 || options.n3 || options.n2 || options.n1 || options.common;
+    final hasFilter =
+        options.n5 ||
+        options.n4 ||
+        options.n3 ||
+        options.n2 ||
+        options.n1 ||
+        options.common;
     if (hasFilter) {
       var pass = false;
       for (final key in options.boolKeys) {

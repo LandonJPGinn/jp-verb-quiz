@@ -9,42 +9,41 @@ class QuizOptions {
   QuizOptions._(this.bools, this.questionFocus, this.numQuestions);
 
   static Map<String, bool> defaultBools() => {
-        'plain': true,
-        'polite': false,
-        'negative': true,
-        'past': true,
-        'te-form': false,
-        'progressive': false,
-        'potential': false,
-        'conditional': false,
-        'provisional': false,
-        'imperative': false,
-        'passive': false,
-        'causative': false,
-        'godan': true,
-        'ichidan': true,
-        'iku': true,
-        'kuru': true,
-        'suru': true,
-        'iru': true,
-        'aru': true,
-        'i-adjective': false,
-        'na-adjective': false,
-        'ii': false,
-        'desire': false,
-        'volitional': false,
-        'trick': true,
-        'kana': false,
-        'common': true,
-        'n5': true,
-        'n4': false,
-        'n3': false,
-        'n2': false,
-        'n1': false,
-      };
+    'plain': true,
+    'polite': false,
+    'negative': true,
+    'past': true,
+    'te-form': false,
+    'progressive': false,
+    'potential': false,
+    'conditional': false,
+    'provisional': false,
+    'imperative': false,
+    'passive': false,
+    'causative': false,
+    'godan': true,
+    'ichidan': true,
+    'iku': true,
+    'kuru': true,
+    'suru': true,
+    'iru': true,
+    'aru': true,
+    'i-adjective': false,
+    'na-adjective': false,
+    'ii': false,
+    'desire': false,
+    'volitional': false,
+    'trick': true,
+    'kana': false,
+    'common': true,
+    'n5': true,
+    'n4': false,
+    'n3': false,
+    'n2': false,
+    'n1': false,
+  };
 
-  factory QuizOptions.defaults() =>
-      QuizOptions._(defaultBools(), 'none', '10');
+  factory QuizOptions.defaults() => QuizOptions._(defaultBools(), 'none', '10');
 
   factory QuizOptions.fromJson(Map<String, dynamic> json) {
     final result = QuizOptions.defaults();
@@ -60,10 +59,10 @@ class QuizOptions {
   }
 
   Map<String, dynamic> toJson() => {
-        'bools': bools,
-        'questionFocus': questionFocus,
-        'numQuestions': numQuestions,
-      };
+    'bools': bools,
+    'questionFocus': questionFocus,
+    'numQuestions': numQuestions,
+  };
 
   String serialize() => jsonEncode(toJson());
 

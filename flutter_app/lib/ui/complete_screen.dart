@@ -39,8 +39,11 @@ class CompleteScreen extends StatelessWidget {
                     color: AppColors.success.withValues(alpha: 0.15),
                     shape: BoxShape.circle,
                   ),
-                  child:
-                      const Icon(Icons.emoji_events, color: AppColors.gold, size: 52),
+                  child: const Icon(
+                    Icons.emoji_events,
+                    color: AppColors.gold,
+                    size: 52,
+                  ),
                 ),
                 const SizedBox(height: 16),
                 const Text(
@@ -56,20 +59,33 @@ class CompleteScreen extends StatelessWidget {
                   'All $mastered questions mastered.',
                   style: TextStyle(
                     fontSize: 15,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
+                    color: Theme.of(context).colorScheme.onSurface
                         .withValues(alpha: 0.75),
                   ),
                 ),
                 const SizedBox(height: 24),
                 Row(
                   children: [
-                    _statTile(context, '$mastered', 'mastered', AppColors.success),
+                    _statTile(
+                      context,
+                      '$mastered',
+                      'mastered',
+                      AppColors.success,
+                    ),
                     const SizedBox(width: 12),
-                    _statTile(context, '$attempts', 'attempts', AppColors.indigo),
+                    _statTile(
+                      context,
+                      '$attempts',
+                      'attempts',
+                      AppColors.indigo,
+                    ),
                     const SizedBox(width: 12),
-                    _statTile(context, '$streak', 'day streak', AppColors.flame),
+                    _statTile(
+                      context,
+                      '$streak',
+                      'day streak',
+                      AppColors.flame,
+                    ),
                   ],
                 ),
                 if (extraAttempts > 0) ...[
@@ -79,16 +95,15 @@ class CompleteScreen extends StatelessWidget {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontSize: 13,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
+                      color: Theme.of(context).colorScheme.onSurface
                           .withValues(alpha: 0.75),
                     ),
                   ),
                 ],
                 const Spacer(),
                 FilledButton(
-                  onPressed: () => Navigator.of(context).popUntil((r) => r.isFirst),
+                  onPressed: () =>
+                      Navigator.of(context).popUntil((r) => r.isFirst),
                   child: const Text('Finish'),
                 ),
               ],
@@ -99,7 +114,12 @@ class CompleteScreen extends StatelessWidget {
     );
   }
 
-  Widget _statTile(BuildContext context, String value, String label, Color color) {
+  Widget _statTile(
+    BuildContext context,
+    String value,
+    String label,
+    Color color,
+  ) {
     return Expanded(
       child: Card(
         child: Padding(
@@ -118,9 +138,7 @@ class CompleteScreen extends StatelessWidget {
                 label,
                 style: TextStyle(
                   fontSize: 12,
-                  color: Theme.of(context)
-                      .colorScheme
-                      .onSurface
+                  color: Theme.of(context).colorScheme.onSurface
                       .withValues(alpha: 0.75),
                 ),
               ),

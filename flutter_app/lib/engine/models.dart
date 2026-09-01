@@ -8,10 +8,10 @@ class RuleEntry {
   RuleEntry({this.before, this.after, this.result});
 
   factory RuleEntry.fromJson(Map<String, dynamic> json) => RuleEntry(
-        before: json['before'] as String?,
-        after: json['after'] as String?,
-        result: json['result'] as String?,
-      );
+    before: json['before'] as String?,
+    after: json['after'] as String?,
+    result: json['result'] as String?,
+  );
 }
 
 class RuleForm {
@@ -21,11 +21,11 @@ class RuleForm {
   RuleForm({required this.forms, this.tetakei = false});
 
   factory RuleForm.fromJson(Map<String, dynamic> json) => RuleForm(
-        forms: (json['forms'] as List)
-            .map((e) => RuleEntry.fromJson(e as Map<String, dynamic>))
-            .toList(),
-        tetakei: json['tetakei'] == true,
-      );
+    forms: (json['forms'] as List)
+        .map((e) => RuleEntry.fromJson(e as Map<String, dynamic>))
+        .toList(),
+    tetakei: json['tetakei'] == true,
+  );
 }
 
 class WordEntry {
@@ -48,14 +48,14 @@ class WordEntry {
   });
 
   factory WordEntry.fromJson(Map<String, dynamic> json) => WordEntry(
-        group: json['group'] as String,
-        dictionary: json['dictionary'] as String,
-        meaning: json['meaning'] as String? ?? '',
-        level: json['level'] as String? ?? '',
-        sentences: (json['sentences'] as List?)?.cast<String>() ?? const [],
-        notes: (json['notes'] as List?)?.cast<String>() ?? const [],
-        tags: (json['tags'] as List?)?.cast<String>() ?? const [],
-      );
+    group: json['group'] as String,
+    dictionary: json['dictionary'] as String,
+    meaning: json['meaning'] as String? ?? '',
+    level: json['level'] as String? ?? '',
+    sentences: (json['sentences'] as List?)?.cast<String>() ?? const [],
+    notes: (json['notes'] as List?)?.cast<String>() ?? const [],
+    tags: (json['tags'] as List?)?.cast<String>() ?? const [],
+  );
 }
 
 /// One conjugated form of a word, mirroring the JS `{ forms: [...] }` shape.
@@ -76,11 +76,11 @@ class Transformation {
   List<String> tags;
 
   Transformation(this.from, this.to)
-      : phrase = '',
-        type = '',
-        fromTags = const [],
-        toTags = const [],
-        tags = const [];
+    : phrase = '',
+      type = '',
+      fromTags = const [],
+      toTags = const [],
+      tags = const [];
 }
 
 class QuizQuestion {

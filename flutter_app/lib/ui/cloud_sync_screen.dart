@@ -87,8 +87,7 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
       if (!mounted) return;
       setState(() {
         _connected = true;
-        _message =
-            'Connected. Every save now uploads, and "Sync now" pulls anything newer.';
+        _message = 'Connected. Every save now uploads, and "Sync now" pulls anything newer.';
       });
       widget.store.reloadFromHub();
     } catch (e) {
@@ -132,7 +131,9 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
       await _cloud.pull(widget.store.hub);
       await widget.store.reloadFromHub();
       if (!mounted) return;
-      setState(() => _message = 'Synced — merged anything newer from the cloud.');
+      setState(
+        () => _message = 'Synced — merged anything newer from the cloud.',
+      );
     } catch (e) {
       if (!mounted) return;
       setState(() {
@@ -159,15 +160,19 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
       appBar: AppBar(title: const Text('Cloud sync')),
       body: ListView(
         padding: EdgeInsets.fromLTRB(
-            20, 8, 20, MediaQuery.viewPaddingOf(context).bottom + 32),
+          20,
+          8,
+          20,
+          MediaQuery.viewPaddingOf(context).bottom + 32,
+        ),
         children: [
           Text(
             _connected
                 ? 'Connected. Every save uploads automatically; "Sync now" '
-                    'merges anything newer from the cloud into this device.'
+                      'merges anything newer from the cloud into this device.'
                 : 'Keep your streak and stats identical on every device. Your '
-                    'data lives in your own free Firebase project — this app '
-                    'never sees it.',
+                      'data lives in your own free Firebase project — this app '
+                      'never sees it.',
             style: const TextStyle(fontSize: 13.5),
           ),
           const SizedBox(height: 16),
@@ -178,7 +183,8 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.sync),
               label: const Text('Sync now'),
             ),
@@ -207,41 +213,55 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
                   padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      _step('1', 'console.firebase.google.com → Add project.'),
-                      _step('2',
-                          'Build → Authentication → Sign-in method → enable Email/Password → Add user (any email + password).'),
-                      _step('3',
-                          'Build → Firestore Database → Create database (production mode).'),
-                      _step('4',
-                          'Firestore → Rules → paste the rules below → Publish.'),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(10),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withValues(alpha: 0.06),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: const Text(
-                          "rules_version = '2';\n"
-                          'service cloud.firestore {\n'
-                          '  match /databases/{database}/documents {\n'
-                          '    match /users/{uid} {\n'
-                          '      allow read, write: if request.auth.uid == uid;\n'
-                          '    }\n'
-                          '  }\n'
-                          '}',
-                          style: TextStyle(
-                              fontFamily: 'monospace', fontSize: 11.5),
-                        ),
-                      ),
-                      _step('5',
-                          'Project settings (gear) → General → Your apps → Web app (</>) → copy the config values below.'),
-                    ].expand((w) => [w, const SizedBox(height: 8)]).toList()
-                      ..removeLast(),
+                    children:
+                        [
+                              _step(
+                                '1',
+                                'console.firebase.google.com → Add project.',
+                              ),
+                              _step(
+                                '2',
+                                'Build → Authentication → Sign-in method → enable Email/Password → Add user (any email + password).',
+                              ),
+                              _step(
+                                '3',
+                                'Build → Firestore Database → Create database (production mode).',
+                              ),
+                              _step(
+                                '4',
+                                'Firestore → Rules → paste the rules below → Publish.',
+                              ),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.onSurface
+                                      .withValues(alpha: 0.06),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: const Text(
+                                  "rules_version = '2';\n"
+                                  'service cloud.firestore {\n'
+                                  '  match /databases/{database}/documents {\n'
+                                  '    match /users/{uid} {\n'
+                                  '      allow read, write: if request.auth.uid == uid;\n'
+                                  '    }\n'
+                                  '  }\n'
+                                  '}',
+                                  style: TextStyle(
+                                    fontFamily: 'monospace',
+                                    fontSize: 11.5,
+                                  ),
+                                ),
+                              ),
+                              _step(
+                                '5',
+                                'Project settings (gear) → General → Your apps → Web app (</>) → copy the config values below.',
+                              ),
+                            ]
+                            .expand((w) => [w, const SizedBox(height: 8)])
+                            .toList()
+                          ..removeLast(),
                   ),
                 ),
               ),
@@ -258,9 +278,7 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
               'Credentials are stored encrypted on this device only.',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context)
-                    .colorScheme
-                    .onSurface
+                color: Theme.of(context).colorScheme.onSurface
                     .withValues(alpha: 0.75),
               ),
             ),
@@ -271,7 +289,8 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
                   ? const SizedBox(
                       width: 18,
                       height: 18,
-                      child: CircularProgressIndicator(strokeWidth: 2))
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
                   : const Icon(Icons.cloud_upload_outlined),
               label: const Text('Connect & sync'),
             ),
@@ -301,12 +320,17 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
           height: 20,
           alignment: Alignment.center,
           decoration: const BoxDecoration(
-              color: AppColors.indigo, shape: BoxShape.circle),
-          child: Text(number,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 11,
-                  fontWeight: FontWeight.w800)),
+            color: AppColors.indigo,
+            shape: BoxShape.circle,
+          ),
+          child: Text(
+            number,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 11,
+              fontWeight: FontWeight.w800,
+            ),
+          ),
         ),
         const SizedBox(width: 8),
         Expanded(child: Text(text, style: const TextStyle(fontSize: 12.5))),
@@ -314,8 +338,11 @@ class _CloudSyncScreenState extends State<CloudSyncScreen> {
     );
   }
 
-  Widget _field(TextEditingController controller, String label,
-      {bool obscure = false}) {
+  Widget _field(
+    TextEditingController controller,
+    String label, {
+    bool obscure = false,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: TextField(

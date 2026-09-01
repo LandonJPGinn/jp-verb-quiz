@@ -6,22 +6,35 @@ import '../state/app_store.dart';
 import 'pickers.dart';
 import 'theme.dart';
 
+/// What the screen is opened for.
+enum OptionsPurpose {
+  /// Pick options, then start a session right away (nothing is saved).
+  customSession,
+
+  /// Create a new preset (caller asks for the name first).
+  createPreset,
+
+  /// Edit an existing preset (set via [OptionsScreen.presetName]).
+  editPreset,
+}
+
 /// Round customization: presets, length, focus, and option chip grids.
 /// Deliberately styled as a "session builder" (cards + chips), distinct
 /// from the flat list of the Settings screen.
 class OptionsScreen extends StatefulWidget {
   final ConjugationEngine engine;
   final AppStore store;
+  final OptionsPurpose purpose;
 
-  /// When set, this screen edits an existing preset: it starts from that
-  /// preset's options and "Done" saves back to it.
-  final String? editingPreset;
+  /// The preset being edited (required for [OptionsPurpose.editPreset]).
+  final String? presetName;
 
   const OptionsScreen({
     super.key,
     required this.engine,
     required this.store,
-    this.editingPreset,
+    this.purpose = OptionsPurpose.customSession,
+    this.presetName,
   });
 
   @override
@@ -33,16 +46,20 @@ class _OptionsScreenState extends State<OptionsScreen> {
   late String _focus;
   late TextEditingController _numQuestions;
 
+  QuizOptions? _baseOptions;
+
   @override
   void initState() {
     super.initState();
-    // Editing a preset starts from that preset; creating a session starts
-    // from the defaults — never from last settings.
-    final base = widget.editingPreset == null
-        ? QuizOptions.defaults()
-        : widget.store.presets
-            .firstWhere((p) => p.name == widget.editingPreset)
-            .options;
+    // Editing a preset starts from that preset; everything else starts from
+    // the defaults — never from last settings.
+    _baseOptions = widget.purpose == OptionsPurpose.editPreset
+        ? widget.store.presets
+              .firstWhere((p) => p.name == widget.presetName)
+              .options
+              .clone()
+        : QuizOptions.defaults();
+    final base = _baseOptions!;
     _bools = {...base.bools};
     _focus = base.questionFocus;
     _numQuestions = TextEditingController(text: base.numQuestions);
@@ -55,7 +72,7 @@ class _OptionsScreenState extends State<OptionsScreen> {
   }
 
   QuizOptions get _current {
-    final options = widget.store.lastOptions;
+    final options = _baseOptions!.clone();
     options.bools
       ..clear()
       ..addAll(_bools);
@@ -110,6 +127,17 @@ class _OptionsScreenState extends State<OptionsScreen> {
     return applicable;
   }
 
+  String _title(BuildContext context) {
+    switch (widget.purpose) {
+      case OptionsPurpose.customSession:
+        return 'Custom session';
+      case OptionsPurpose.createPreset:
+        return 'New preset: ${widget.presetName}';
+      case OptionsPurpose.editPreset:
+        return 'Edit: ${widget.presetName}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final applicable = _applicableQuestions();
@@ -118,10 +146,7 @@ class _OptionsScreenState extends State<OptionsScreen> {
     final noPoliteness = !_bools['plain']! && !_bools['polite']!;
 
     return Scaffold(
-      appBar: AppBar(
-          title: Text(widget.editingPreset == null
-              ? 'Customize session'
-              : 'Edit "${widget.editingPreset}"')),
+      appBar: AppBar(title: Text(_title(context))),
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
@@ -148,12 +173,16 @@ class _OptionsScreenState extends State<OptionsScreen> {
                 onPressed: (notEnough || noPoliteness)
                     ? null
                     : () => Navigator.of(context).pop(_current),
-                icon: Icon(widget.editingPreset == null
-                    ? Icons.play_arrow
-                    : Icons.check),
-                label: Text(widget.editingPreset == null
-                    ? 'Start with these options'
-                    : 'Save preset'),
+                icon: Icon(
+                  widget.purpose == OptionsPurpose.customSession
+                      ? Icons.play_arrow
+                      : Icons.check,
+                ),
+                label: Text(
+                  widget.purpose == OptionsPurpose.customSession
+                      ? 'Start session'
+                      : 'Save preset',
+                ),
               ),
             ],
           ),
@@ -161,31 +190,12 @@ class _OptionsScreenState extends State<OptionsScreen> {
       ),
       body: ListView(
         padding: EdgeInsets.fromLTRB(
-            20, 8, 20, MediaQuery.viewPaddingOf(context).bottom + 24),
+          20,
+          8,
+          20,
+          MediaQuery.viewPaddingOf(context).bottom + 24,
+        ),
         children: [
-          SettingsCard(
-            title: 'Presets',
-            child: Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                for (final preset in widget.store.presets)
-                  InputChip(
-                    label: Text(preset.name),
-                    avatar: const Icon(Icons.bookmark, size: 15),
-                    visualDensity: VisualDensity.compact,
-                    onDeleted: () => _confirmDeletePreset(preset.name),
-                    onPressed: () => _loadPreset(preset.options),
-                  ),
-                ActionChip(
-                  avatar: const Icon(Icons.add, size: 17),
-                  label: const Text('Save current'),
-                  visualDensity: VisualDensity.compact,
-                  onPressed: _savePresetDialog,
-                ),
-              ],
-            ),
-          ),
           const SizedBox(height: 12),
           SettingsCard(
             title: 'Session length',
@@ -204,7 +214,9 @@ class _OptionsScreenState extends State<OptionsScreen> {
                     keyboardType: TextInputType.number,
                     textAlign: TextAlign.center,
                     style: const TextStyle(
-                        fontSize: 20, fontWeight: FontWeight.w800),
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                    ),
                     decoration: const InputDecoration(
                       isDense: true,
                       border: InputBorder.none,
@@ -232,7 +244,8 @@ class _OptionsScreenState extends State<OptionsScreen> {
               'Pooled Questions: $applicable',
               style: TextStyle(
                 fontSize: 12,
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+                color: Theme.of(context).colorScheme.onSurface
+                    .withValues(alpha: 0.75),
               ),
             ),
             child: InkWell(
@@ -243,8 +256,10 @@ class _OptionsScreenState extends State<OptionsScreen> {
               borderRadius: BorderRadius.circular(12),
               child: Container(
                 width: double.infinity,
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 12,
+                ),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(12),
                   border: Border.all(
@@ -260,7 +275,9 @@ class _OptionsScreenState extends State<OptionsScreen> {
                       child: Text(
                         focusOptions[_focus] ?? 'None',
                         style: const TextStyle(
-                            fontSize: 15, fontWeight: FontWeight.w600),
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
                     const Icon(Icons.keyboard_arrow_down, size: 20),
@@ -411,7 +428,8 @@ class _OptionsScreenState extends State<OptionsScreen> {
             'Hiragana only hides all kanji in questions and answers.',
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.75),
+              color: Theme.of(context).colorScheme.onSurface
+                  .withValues(alpha: 0.75),
             ),
           ),
         ],
@@ -419,7 +437,8 @@ class _OptionsScreenState extends State<OptionsScreen> {
     );
   }
 
-  Widget _stepperButton(IconData icon, VoidCallback onTap) => IconButton.outlined(
+  Widget _stepperButton(IconData icon, VoidCallback onTap) =>
+      IconButton.outlined(
         onPressed: onTap,
         icon: Icon(icon, size: 18),
         style: IconButton.styleFrom(
@@ -428,77 +447,9 @@ class _OptionsScreenState extends State<OptionsScreen> {
                 ? AppColors.outlineDark
                 : AppColors.outline,
           ),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
         ),
       );
-
-  void _savePresetDialog() {
-    final controller = TextEditingController();
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Save preset'),
-        content: TextField(
-          controller: controller,
-          autofocus: true,
-          decoration: const InputDecoration(hintText: 'e.g. "N5 warm-up"'),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            onPressed: () {
-              final name = controller.text.trim();
-              if (name.isNotEmpty) {
-                widget.store.addPreset(name, _current);
-                Navigator.pop(dialogContext);
-              }
-            },
-            child: const Text('Save'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _confirmDeletePreset(String name) {
-    showDialog(
-      context: context,
-      builder: (dialogContext) => AlertDialog(
-        title: const Text('Delete preset?'),
-        content: Text('"$name" will be removed. Your settings stay unchanged.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(dialogContext),
-            child: const Text('Cancel'),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: AppColors.error,
-              foregroundColor: Colors.white,
-            ),
-            onPressed: () {
-              widget.store.removePreset(name);
-              Navigator.pop(dialogContext);
-              setState(() {});
-            },
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _loadPreset(QuizOptions options) {
-    setState(() {
-      _bools
-        ..clear()
-        ..addAll(options.bools);
-      _focus = options.questionFocus;
-      _numQuestions.text = options.numQuestions;
-    });
-    _persist();
-  }
 }

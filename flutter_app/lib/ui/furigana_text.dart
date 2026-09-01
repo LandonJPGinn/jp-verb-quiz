@@ -6,9 +6,7 @@ class FuriganaSegment {
   final String? reading; // furigana reading, null for plain text
   final String? text; // plain text
 
-  FuriganaSegment.plain(this.text)
-      : base = null,
-        reading = null;
+  FuriganaSegment.plain(this.text) : base = null, reading = null;
 
   FuriganaSegment.ruby(this.base, this.reading) : text = null;
 }

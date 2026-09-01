@@ -29,9 +29,8 @@ class DataSyncScreen extends StatelessWidget {
       messenger.hideCurrentSnackBar();
     } catch (e) {
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Export failed: $e')),
-      );
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Export failed: $e')));
     }
   }
 
@@ -42,15 +41,17 @@ class DataSyncScreen extends StatelessWidget {
       if (result == null) return;
       final changed = await store.hub.mergeInto(result);
       await store.reloadFromHub();
-      messenger.showSnackBar(SnackBar(
-        content: Text(changed.isEmpty
-            ? 'Nothing new to merge — backup matches current data.'
-            : 'Merged: ${changed.keys.join(", ")}.'),
-      ));
-    } catch (e) {
       messenger.showSnackBar(
-        SnackBar(content: Text('Import failed: $e')),
+        SnackBar(
+          content: Text(
+            changed.isEmpty
+                ? 'Nothing new to merge — backup matches current data.'
+                : 'Merged: ${changed.keys.join(", ")}.',
+          ),
+        ),
       );
+    } catch (e) {
+      messenger.showSnackBar(SnackBar(content: Text('Import failed: $e')));
     }
   }
 
@@ -60,7 +61,11 @@ class DataSyncScreen extends StatelessWidget {
       appBar: AppBar(title: const Text('Backup file')),
       body: ListView(
         padding: EdgeInsets.fromLTRB(
-            20, 8, 20, MediaQuery.viewPaddingOf(context).bottom + 32),
+          20,
+          8,
+          20,
+          MediaQuery.viewPaddingOf(context).bottom + 32,
+        ),
         children: [
           const Text(
             'A single file holds your entire practice history: daily stats, '
@@ -73,20 +78,20 @@ class DataSyncScreen extends StatelessWidget {
             child: Column(
               children: [
                 ListTile(
-                  leading:
-                      Icon(Icons.save_alt, color: accentOf(context)),
+                  leading: Icon(Icons.save_alt, color: accentOf(context)),
                   title: const Text('Export backup'),
-                  subtitle:
-                      const Text('Share a snapshot file you can keep anywhere'),
+                  subtitle: const Text(
+                    'Share a snapshot file you can keep anywhere',
+                  ),
                   onTap: () => _exportBackup(context),
                 ),
                 const Divider(height: 1),
                 ListTile(
-                  leading:
-                      Icon(Icons.save_as, color: accentOf(context)),
+                  leading: Icon(Icons.save_as, color: accentOf(context)),
                   title: const Text('Import backup'),
-                  subtitle:
-                      const Text('Merge a previously exported file — nothing is overwritten'),
+                  subtitle: const Text(
+                    'Merge a previously exported file — nothing is overwritten',
+                  ),
                   onTap: () => _importBackup(context),
                 ),
               ],
@@ -100,8 +105,7 @@ class DataSyncScreen extends StatelessWidget {
           const SizedBox(height: 8),
           OutlinedButton.icon(
             onPressed: () => Navigator.of(context).push(
-              MaterialPageRoute(
-                  builder: (_) => CloudSyncScreen(store: store)),
+              MaterialPageRoute(builder: (_) => CloudSyncScreen(store: store)),
             ),
             icon: const Icon(Icons.cloud_sync_outlined),
             label: const Text('Set up cloud sync'),

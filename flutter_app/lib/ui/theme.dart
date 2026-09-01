@@ -65,8 +65,9 @@ ThemeData _base(ColorScheme scheme, Brightness brightness) {
     useMaterial3: true,
     brightness: brightness,
     colorScheme: scheme,
-    scaffoldBackgroundColor:
-        dark ? AppColors.canvasDark : AppColors.canvasLight,
+    scaffoldBackgroundColor: dark
+        ? AppColors.canvasDark
+        : AppColors.canvasLight,
     appBarTheme: AppBarTheme(
       backgroundColor: dark ? AppColors.canvasDark : AppColors.canvasLight,
       foregroundColor: dark ? Colors.white : AppColors.indigoDark,
@@ -77,7 +78,9 @@ ThemeData _base(ColorScheme scheme, Brightness brightness) {
         fontSize: 20,
         fontWeight: FontWeight.w800,
       ),
-      iconTheme: IconThemeData(color: dark ? Colors.white : AppColors.indigoDark),
+      iconTheme: IconThemeData(
+        color: dark ? Colors.white : AppColors.indigoDark,
+      ),
     ),
     filledButtonTheme: FilledButtonThemeData(
       style: FilledButton.styleFrom(
@@ -105,7 +108,9 @@ ThemeData _base(ColorScheme scheme, Brightness brightness) {
       elevation: 0,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
-        side: BorderSide(color: dark ? AppColors.outlineDark : AppColors.outline),
+        side: BorderSide(
+          color: dark ? AppColors.outlineDark : AppColors.outline,
+        ),
       ),
       margin: EdgeInsets.zero,
     ),
@@ -163,9 +168,7 @@ ThemeData _base(ColorScheme scheme, Brightness brightness) {
     inputDecorationTheme: InputDecorationTheme(
       filled: true,
       fillColor: dark ? AppColors.cardDark : Colors.white,
-      hintStyle: TextStyle(
-        color: onSurface.withValues(alpha: 0.75),
-      ),
+      hintStyle: TextStyle(color: onSurface.withValues(alpha: 0.75)),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(16),
         borderSide: BorderSide(
@@ -192,11 +195,11 @@ ThemeData _base(ColorScheme scheme, Brightness brightness) {
 /// white wash out on the dark cards, so dark mode gets a higher floor.
 Color muted(BuildContext context, [double lightAlpha = 0.6]) =>
     Theme.of(context).brightness == Brightness.dark
-        ? Colors.white.withValues(alpha: 0.85)
-        : AppColors.indigoDark.withValues(alpha: lightAlpha);
+    ? Colors.white.withValues(alpha: 0.85)
+    : AppColors.indigoDark.withValues(alpha: lightAlpha);
 
 /// Accent colour for icons that must read on both themes.
 Color accentOf(BuildContext context) =>
     Theme.of(context).brightness == Brightness.dark
-        ? const Color(0xFF8FB4EA)
-        : AppColors.indigo;
+    ? const Color(0xFF8FB4EA)
+    : AppColors.indigo;
