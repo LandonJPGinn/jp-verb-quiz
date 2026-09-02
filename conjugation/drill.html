@@ -9,15 +9,23 @@
   <meta property="og:image" content="img/prev.png" />
   <meta property="og:image:width" content="300" />
   <meta property="og:image:height" content="300" />
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-    integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover">
+  <meta name="description" content="Drill yourself on Japanese verb and adjective conjugation forms.">
+  <meta name="theme-color" content="#77428D">
+  <link rel="manifest" href="manifest.json">
+  <link rel="icon" type="image/png" href="img/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="img/apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JP Conjugation">
+  <link rel="stylesheet" href="vendor/bootstrap.min.css">
   <link rel="stylesheet" href="drill.css" type="text/css" media="screen">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 
-  <script defer src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script defer src="vendor/jquery-3.7.1.min.js"></script>
   <script defer type="module" src="rules.js"></script>
   <script defer type="module" src="drill.js"></script>
 
@@ -72,10 +80,10 @@
     </div>
 
     <div class="row justify-content-center mb-4 mt-4">
-      <div class="col-4">
+      <div class="col-6 col-sm-4">
         <button class="btn btn-primary col-12" type="button" id="go" onclick="event.preventDefault();">Go</button>
       </div>
-      <div class="col-4">
+      <div class="col-6 col-sm-4">
         <button class="btn btn-secondary col-12" type="button" id="defaults" onclick="event.preventDefault();">Reset</button>
       </div>
     </div>
@@ -94,7 +102,7 @@
 
       <div class="row">
 
-        <div class="col-4 text-center">
+        <div class="col-12 col-md-4 text-center">
           <div class="form-group">
             <div style="display: inline-block">
               <h4 class="text-left mt-2 mb-4">Forms</h4>
@@ -130,7 +138,7 @@
           </div>
         </div>
 
-        <div class="col-8">
+        <div class="col-12 col-md-8">
 
           <div class="row">
 
@@ -233,9 +241,12 @@
     </div>
     <div class="row justify-content-center mt-3 ml-2 mr-2">
       <p>Want to leave some feedback? <a href="https://forms.gle/QeJ33fNda7SD79b89" target="_blank" rel="noopener noreferrer">Report an issue here</a>.</p>
-    </div> 
+    </div>
     <div class="row justify-content-center mt-0 ml-2 mr-2">
       <p>-<a href="https://github.com/LandonJPGinn/jp-verb-quiz" target="_blank" rel="noopener noreferrer">GitHub Repo</a>-</p>
+    </div>
+    <div class="row justify-content-center mt-0 ml-2 mr-2">
+      <p class="installHint text-muted">Tip: install this drill to your home screen for fullscreen, offline practice.</p>
     </div>
 
   </div>
@@ -300,7 +311,7 @@
     <div id="inputArea" class="row">
       <div class="col-12">
         <form name="quizForm" action="javascript:processAnswer()">
-          <input placeholder="答え" autocomplete="off" autocapitalize="off" id="answer" aria-label="答え">
+          <input placeholder="答え" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" id="answer" aria-label="答え">
         </form>
       </div>
     </div>
@@ -389,6 +400,16 @@
 
 
   </div>
+
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('./sw.js').catch(function (err) {
+          console.warn('Service worker registration failed:', err);
+        });
+      });
+    }
+  </script>
 
 </body>
 

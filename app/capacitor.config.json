@@ -1,0 +1,11 @@
+{
+  "appId": "com.landonjp.verbquiz",
+  "appName": "JP Conjugation",
+  "webDir": "../conjugation",
+  "android": {
+    "allowMixedContent": false
+  },
+  "server": {
+    "androidScheme": "https"
+  }
+}

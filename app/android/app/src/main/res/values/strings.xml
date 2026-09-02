@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">JP Conjugation</string>
+    <string name="title_activity_main">JP Conjugation</string>
+    <string name="package_name">com.landonjp.verbquiz</string>
+    <string name="custom_url_scheme">com.landonjp.verbquiz</string>
+</resources>

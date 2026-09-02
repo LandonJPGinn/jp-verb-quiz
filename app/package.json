@@ -1,0 +1,20 @@
+{
+  "name": "jp-conjugation-app",
+  "version": "1.0.0",
+  "description": "Native app wrapper (Capacitor) for Lan-Don's Japanese Conjugation Drill",
+  "private": true,
+  "scripts": {
+    "cap:sync": "cap sync android",
+    "cap:open": "cap open android",
+    "build:debug": "cap sync android && cd android && gradlew.bat assembleDebug",
+    "build:release": "cap sync android && cd android && gradlew.bat assembleRelease"
+  },
+  "devDependencies": {
+    "@capacitor/assets": "^3.0.5"
+  },
+  "dependencies": {
+    "@capacitor/android": "^7.0.0",
+    "@capacitor/cli": "^7.0.0",
+    "@capacitor/core": "^7.0.0"
+  }
+}
