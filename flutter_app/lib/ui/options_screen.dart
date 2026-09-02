@@ -89,16 +89,16 @@ class _OptionsScreenState extends State<OptionsScreen> {
 
   // Port of updateOptionSummary (drill.js) using the bundled count sample.
   static const Map<String, int> groupCounts = {
-    'godan': 109,
-    'ichidan': 38,
+    'godan': 864,
+    'ichidan': 429,
     'iku': 1,
     'kuru': 1,
-    'suru': 118,
+    'suru': 1665,
     'aru': 1,
     'iru': 1,
-    'i-adjective': 7,
+    'i-adjective': 58,
     'ii': 1,
-    'na-adjective': 8,
+    'na-adjective': 50,
   };
 
   static const Map<String, String> sampleWords = {
